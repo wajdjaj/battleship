@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.*;
 import java.net.*;
@@ -16,7 +16,7 @@ class Position{
 public class GameServer {
 	int board[][][] = new int[2][8][8]; //[player][x][y] 0 miss 1 hit 2 already taken
 	int currentPlayer;
-	Socket players[];
+	Socket players[] = new Socket[2];
 	public static void main(String argv[]) {
 		new GameServer().run();
 	}

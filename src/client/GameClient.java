@@ -1,7 +1,15 @@
 package client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+
 public class GameClient {
-	
+	Socket socket;
 	final int numberOfShips = 7;
 	public static void main(String argv[]) {
 		new GameClient().run();
@@ -10,27 +18,24 @@ public class GameClient {
 		setup();
 		play();
 	}
-	void setup(){
-		String shipSetup;
+
+	void setup() {
 		int placedShips = 0;
-		while (placedShips < numberOfShips)
-			do{
-				shipSetup = placeShips();
-			}while(!validSetup(shipSetup));
-	}	
-		
-	String placeShips(){
-		int shipTypes[] = getShipTypes();
-		StringBuilder bob = new StringBuilder();
-		for (int ship : shipTypes){
-			int placement;
-			do{
-				placement = getPlacement(ship);
-			}while(invalidPosition(placement));
-			bob.append(ship + " " + placement);
+		String placement;
+		try {
+			socket = new Socket("localhost", 30000);
+			while (placedShips < numberOfShips) {
+				do {
+					placement = getPlacement();
+				} while (!invalidPosition(placement));
+				placedShips++;
+			}
+		} catch (IOException e) {
+			System.out.println(e);
 		}
-		return bob.toString();
+
 	}
+		
 	
 	boolean validSetup(String shipSetup){
 		return false; //Server will confirm if the setup is acceptable or not.
@@ -42,7 +47,7 @@ public class GameClient {
 		while (!gameEnd){
 			updateGameState();
 			if (playerTurn){
-				int target;
+				String target;
 				do{
 					target = getFirePosition(); // user pick desired square to shoot at;
 				}while(invalidPosition(target));
@@ -62,18 +67,34 @@ public class GameClient {
 	 * @param ship is length of ship to place
 	 * @return desired ship position
 	 */
-	int getPlacement(int ship){
-		return 0; //Player will specify position of ships in one way or another
+	String getPlacement(){
+		Scanner scan = new Scanner(System.in);
+		String txt = scan.nextLine();
+		scan.close();
+		return txt;
 	}
 	
-	boolean invalidPosition(int placement){
+	boolean invalidPosition(String placement) {
+		try {
+			PrintWriter toServer = new PrintWriter(socket.getOutputStream(),
+					true);
+			BufferedReader fromServer = new BufferedReader(
+					new InputStreamReader(socket.getInputStream()));
+			toServer.println(placement);
+			String result = fromServer.readLine();
+			toServer.close();
+			fromServer.close();
+			return result.equals("Success");
+		} catch (IOException e) {
+			System.out.println(e);
+		}
 		return false;
 	}
 	void updateGameState(){
 		
 	}
 	
-	int getFirePosition(){
-		return 0;	//get desired position to fire at from user
+	String getFirePosition(){
+		return getPlacement();
 	}
 }

@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,11 +26,13 @@ public class Worker implements Runnable {
 			int placedShips = 0;
 			String placement;
 			while ((placement = fromClient.readLine()) != null && placedShips != shipsToPlace){
-				if (!placeShip(placement))
+				if (!placeShip(placement)){
 					toClient.println("Invalid position");
+				}
 				else{
 					placedShips++;
 					toClient.println("Success");
+					System.out.println("Placed boat at" + placement);
 				}
 			}
 			doneSignal.countDown();
