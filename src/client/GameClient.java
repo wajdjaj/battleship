@@ -19,6 +19,7 @@ public class GameClient {
 		play();
 	}
 
+	private int retryConnection = 10;
 	void setup() {
 		int placedShips = 0;
 		String placement;
@@ -33,8 +34,20 @@ public class GameClient {
 				} while (!invalidPosition(placement));
 				placedShips++;
 			}
-		} catch (IOException e) {
-			System.out.println(e);
+		} catch (java.net.ConnectException e) {
+				try {
+					if(retryConnection > 0){
+						System.out.println("Server not found, retry to connect...");
+						Thread.sleep(1000);
+						setup();
+						retryConnection--;
+					}
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+		} catch (Exception e){
+			System.out.println("Setup() " + e);
+			System.exit(0);
 		}
 
 	}
@@ -71,6 +84,8 @@ public class GameClient {
 	 * @return desired ship position
 	 */
 	String getPlacement(){
+		// " (Length of the boat | cord1 | cord2 
+		System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
 		Scanner scan = new Scanner(System.in);
 		String txt = scan.nextLine();
 		scan.close();
