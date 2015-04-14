@@ -43,6 +43,7 @@ public class GameServer {
 			ServerSocket server = new ServerSocket(port);
 			for (int i = 0; i < players.length; i++){
 				players[i] = server.accept();
+				System.out.println("New player connected.");
 			}
 			server.close();
 		}catch(IOException e){
