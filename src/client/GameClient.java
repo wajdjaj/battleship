@@ -24,6 +24,9 @@ public class GameClient {
 		String placement;
 		try {
 			socket = new Socket("localhost", 30000);
+			if(socket.isConnected()){
+				System.out.println("Connected to server.");
+			}
 			while (placedShips < numberOfShips) {
 				do {
 					placement = getPlacement();
