@@ -24,7 +24,7 @@ public class GameServerTest {
 		GameServer server = new GameServer();
 		new Thread(server).start();
 		try {
-			wait(2000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

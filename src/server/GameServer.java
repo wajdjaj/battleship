@@ -22,9 +22,12 @@ public class GameServer implements Runnable{
 	}
 	public void run(){
 		int winner = -1;
+		System.out.println("1");
 		waitPlayers(30000); //input port number
+		System.out.println("2");
 		waitClientBoardSetup();
-		currentPlayer = coinFlip();
+		System.out.println("3");
+		currentPlayer = coinFlip();		
 		while (winner == -1){
 			announceTurn();			
 			while(targetHit()){
@@ -51,10 +54,12 @@ public class GameServer implements Runnable{
 		}
 	}
 	void waitClientBoardSetup(){
+		System.out.println("2.1");
 		CountDownLatch doneSignal = new CountDownLatch(players.length);
 		for (int i = 0; i < players.length; i++){
 			new Thread(new Worker(players[i],board[i], doneSignal)).start();
 		}
+		System.out.println("2.2");
 		try {
 			doneSignal.await();
 		} catch (InterruptedException e) {

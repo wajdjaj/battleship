@@ -21,11 +21,13 @@ public class Worker implements Runnable {
 
 	public void run() {
 		try{
+			System.out.println("Inside worker");
 			PrintWriter toClient = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));			
 			int placedShips = 0;
 			String placement;
 			while ((placement = fromClient.readLine()) != null && placedShips != shipsToPlace){
+				System.out.println("Worker is working. Just received line " + placement);
 				if (!placeShip(placement)){
 					toClient.println("Invalid position");
 				}
@@ -63,14 +65,18 @@ public class Worker implements Runnable {
 	int charToInt(char in){		
 		return Character.toLowerCase(in) - 'a';
 	}
-	boolean addShipToBoard(int size, int p[]){
+
+	boolean addShipToBoard(int size, int p[]) {
+		size = size - 1; // reducing size in order for it to work as an index
+		if (size < 1 && size > 4)
+			return false;
 		if (numberOfShip[size] < 1)
 			return false;
-		int changeX = (p[2]-p[0])/size;
-		int changeY = (p[3]-p[1])/size;
+		int changeX = (p[2] - p[0]) / size;
+		int changeY = (p[3] - p[1]) / size;
 		int currentX = p[0];
 		int currentY = p[1];
-		for (int i = 0; i < size; i++){
+		for (int i = 0; i <= size; i++) {
 			if (board[currentX][currentY] != 0)
 				return false;
 			currentX += changeX;
@@ -78,7 +84,7 @@ public class Worker implements Runnable {
 		}
 		currentX = p[0];
 		currentY = p[1];
-		for (int i = 0; i < size; i++){
+		for (int i = 0; i <= size; i++) {
 			board[currentX][currentY] = 1;
 			currentX += changeX;
 			currentY += changeY;
