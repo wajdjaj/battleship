@@ -13,14 +13,14 @@ class Position{
 	}
 }
 
-public class GameServer {
+public class GameServer implements Runnable{
 	int board[][][] = new int[2][8][8]; //[player][x][y] 0 miss 1 hit 2 already taken
 	int currentPlayer;
-	Socket players[] = new Socket[2];
+	Socket players[] = new Socket[2];	
 	public static void main(String argv[]) {
 		new GameServer().run();
 	}
-	void run(){
+	public void run(){
 		int winner = -1;
 		waitPlayers(30000); //input port number
 		waitClientBoardSetup();
@@ -106,6 +106,9 @@ public class GameServer {
 	int coinFlip(){
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt(2);
+	}
+	public int[][] getBoard(int player){
+		return board[player];
 	}
 	
 }
