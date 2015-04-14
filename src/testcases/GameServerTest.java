@@ -10,10 +10,6 @@ import server.GameServer;
 import client.GameClient;
 
 public class GameServerTest {
-	public static void oneTimeSetUp(){
-		GameServer server = new GameServer();
-		server.run();
-	}
 	@Test
 	public void testWaitPlayers() {
 		fail("Not yet implemented");
@@ -23,13 +19,9 @@ public class GameServerTest {
 	public void testWaitClientBoardSetup() {
 		GameServer server = new GameServer();
 		new Thread(server).start();
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		new Thread(new GameClient(new StringReader("1 A1 A1"))).start();
 		new Thread(new GameClient(new StringReader("1 A1 A1"))).start();
+		
 		int board0[][] = server.getBoard(0);
 		int board1[][] = server.getBoard(1);
 		for (int i = 0; i < 8; i++){

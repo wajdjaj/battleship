@@ -21,7 +21,6 @@ public class Worker implements Runnable {
 
 	public void run() {
 		try{
-			System.out.println("Inside worker");
 			PrintWriter toClient = new PrintWriter(socket.getOutputStream(), true);
 			BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));			
 			int placedShips = 0;
@@ -51,7 +50,7 @@ public class Worker implements Runnable {
 			int size = Integer.parseInt(matcher.group(1));
 			for (int i = 0; i < 2; i++){
 				p[i*2] = charToInt(matcher.group(i+2).charAt(0));
-				p[i*2+1] = Integer.parseInt(matcher.group(i+2).substring(1));
+				p[i*2+1] = Integer.parseInt(matcher.group(i+2).substring(1))-1;
 			}			
 			for (int i = 0; i < 4; i++){
 				if (p[i] >= 8 && p[i] < 0) // if position is outside allowed region return false
@@ -72,8 +71,11 @@ public class Worker implements Runnable {
 			return false;
 		if (numberOfShip[size] < 1)
 			return false;
-		int changeX = (p[2] - p[0]) / size;
-		int changeY = (p[3] - p[1]) / size;
+		int divide = size;
+		if (size == 0)
+			divide = 1;
+		int changeX = (p[2] - p[0]) / divide;
+		int changeY = (p[3] - p[1]) / divide;
 		int currentX = p[0];
 		int currentY = p[1];
 		for (int i = 0; i <= size; i++) {
