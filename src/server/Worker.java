@@ -26,19 +26,22 @@ public class Worker implements Runnable {
 			int placedShips = 0;
 			String placement;
 			while ((placement = fromClient.readLine()) != null && placedShips != shipsToPlace){
-				System.out.println("Worker is working. Just received line " + placement);
+				//System.out.println("Worker is working. Just received line " + placement);
 				if (!placeShip(placement)){
 					toClient.println("Invalid position");
+					//System.out.println("Invalid position");
 				}
 				else{
 					placedShips++;
+					System.out.println("Success");
 					toClient.println("Success");
-					System.out.println("Placed boat at" + placement);
+					//System.out.println("Placed boat at" + placement);
 				}
 			}
 			doneSignal.countDown();
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("@Worker.run " + e);
+			System.exit(0);
 		}
 	}
 	

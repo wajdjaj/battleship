@@ -4,22 +4,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.Socket;
-import java.util.Scanner;
 
-
-public class GameClient {
+public class GameClient implements Runnable {
 	Socket socket;
 	final int numberOfShips = 7;
+	private final BufferedReader br;
+	public GameClient(){
+		br = new BufferedReader(new InputStreamReader(System.in));
+	}
+	public GameClient(Reader r){
+		br = new BufferedReader(r);
+	}
 	public static void main(String argv[]) {
 		new GameClient().run();
 	}
-	void run(){
+	public void run(){
 		setup();
 		play();
 	}
-
-	private int retryConnection = 10;
 	void setup() {
 		int placedShips = 0;
 		String placement;
@@ -34,29 +38,13 @@ public class GameClient {
 				} while (!invalidPosition(placement));
 				placedShips++;
 			}
-		} catch (java.net.ConnectException e) {
-				try {
-					if(retryConnection > 0){
-						System.out.println("Server not found, retry to connect...");
-						Thread.sleep(1000);
-						setup();
-						retryConnection--;
-					}
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-		} catch (Exception e){
-			System.out.println("Setup() " + e);
-			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("@setup " + e);
+			System.exit(1);
 		}
 
 	}
 		
-	
-	boolean validSetup(String shipSetup){
-		return false; //Server will confirm if the setup is acceptable or not.
-	}
-	
 	void play(){
 		boolean gameEnd = false;
 		boolean playerTurn = true; //for now...
@@ -76,20 +64,18 @@ public class GameClient {
 	int[] getShipTypes(){
 		return null;
 	}
-	
-	
-	/**
-	 * 
-	 * @param ship is length of ship to place
-	 * @return desired ship position
-	 */
+
 	String getPlacement(){
 		// " (Length of the boat | cord1 | cord2 
-		System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
-		Scanner scan = new Scanner(System.in);
-		String txt = scan.nextLine();
-		scan.close();
-		return txt;
+		try{
+			//System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
+			return br.readLine();
+		}catch(IOException e){
+			System.out.println("@getPlacement " + e);
+			System.exit(1);
+		}
+		return null;
+		
 	}
 	
 	boolean invalidPosition(String placement) {
@@ -99,12 +85,11 @@ public class GameClient {
 			BufferedReader fromServer = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 			toServer.println(placement);
-			String result = fromServer.readLine();
-			toServer.close();
-			fromServer.close();
+			String result = fromServer.readLine();			
 			return result.equals("Success");
 		} catch (IOException e) {
-			System.out.println(e);
+			System.out.println("@invalidPosition " + e);
+			System.exit(1);
 		}
 		return false;
 	}

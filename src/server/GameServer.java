@@ -46,7 +46,8 @@ public class GameServer implements Runnable{
 			}
 			server.close();
 		}catch(IOException e){
-			System.out.println(e); //Awesome error handling!
+			System.out.println("@waitPlayers" + e);
+			System.exit(1);
 		}
 	}
 	void waitClientBoardSetup(){
@@ -57,16 +58,17 @@ public class GameServer implements Runnable{
 		try {
 			doneSignal.await();
 		} catch (InterruptedException e) {
-			System.out.println(e);
+			System.out.println("@waitClientBoardSetup " + e);
+			System.exit(1);
 		}
 	}
 	void announceTurn(){
 		try{
 			PrintWriter toClient = new PrintWriter(players[currentPlayer].getOutputStream(),true);
-			toClient.println("Turn");
-			toClient.close();
+			toClient.println("Turn");			
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("@announceTurn " + e);
+			System.exit(1);
 		}
 		
 	}
@@ -99,7 +101,8 @@ public class GameServer implements Runnable{
 			toClientLoser.println("Lose");
 			toClientLoser.close();
 		}catch(IOException e){
-			System.out.println(e);
+			System.out.println("@announceWinner " + e);
+			System.exit(1);
 		}
 	}
 	int coinFlip(){
