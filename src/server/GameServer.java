@@ -17,6 +17,8 @@ class Position{
 
 public class GameServer implements Runnable{
 	int board[][][] = new int[2][8][8]; //[player][x][y] 0 miss 1 hit 2 already taken
+	int numberOfHits[] = new int[]{0,0};
+	int necessaryHits = 16;
 	int currentPlayer;
 	BufferedReader fromClient[] = new BufferedReader[2];
 	PrintWriter toClient[] = new PrintWriter[2];
@@ -86,8 +88,8 @@ public class GameServer implements Runnable{
 				}
 				System.out.println("Received response from user");
 				if (p == null ||
-						p.x > 7 || p.x < 0 && 
-						p.y > 7 && p.y < 0 && 
+						p.x > 7 || p.x < 0 || 
+						p.y > 7 || p.y < 0 || 
 						board[-currentPlayer + 1][p.x][p.y] == 2){					
 					toClient[currentPlayer].println("Invalid position");
 				}
@@ -106,7 +108,8 @@ public class GameServer implements Runnable{
 	}
 	
 	boolean victory(){
-		return false; // Check if the game is over
+		numberOfHits[currentPlayer]++;
+		return numberOfHits[currentPlayer] == necessaryHits;
 	}
 	
 	
@@ -122,18 +125,15 @@ public class GameServer implements Runnable{
 		return board[player];
 	}
 	
-	Position stringToPosition(String in){
-		System.out.println("string in= " + in);
+	Position stringToPosition(String in){	
 		if (in == null)
 			return null;
 		Pattern pattern = Pattern.compile("(\\w\\d)");
 		Matcher matcher = pattern.matcher(in);
-		int x;
-		int y;
 		if (matcher.find()){
 			System.out.println(matcher.group(1).charAt(0));
-			x = Worker.charToInt(matcher.group(1).charAt(0));
-			y = Integer.parseInt(matcher.group(1).substring(1))-1;
+			int x = Worker.charToInt(matcher.group(1).charAt(0));
+			int y = Integer.parseInt(matcher.group(1).substring(1))-1;
 			System.out.println("stringToPosition");
 			System.out.println(x);
 			System.out.println(y);
