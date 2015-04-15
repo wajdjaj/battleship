@@ -100,6 +100,11 @@ public class GameServer implements Runnable{
 			int state = board[-currentPlayer+1][p.x][p.y];
 			board[-currentPlayer+1][p.x][p.y] = 2;
 			if (state == 1){
+				numberOfHits[currentPlayer]++;
+				if (victory()){
+					toClient[currentPlayer].println("Win");
+					return true;
+				}
 				toClient[currentPlayer].println("Success");
 				return true;
 			}				
@@ -108,14 +113,12 @@ public class GameServer implements Runnable{
 	}
 	
 	boolean victory(){
-		numberOfHits[currentPlayer]++;
 		return numberOfHits[currentPlayer] == necessaryHits;
 	}
 	
 	
 	void announceWinner(int winner){
-		toClient[winner].println("Winner");
-		toClient[-winner+1].println("Loser");
+		toClient[-winner+1].println("Lose");
 	}
 	int coinFlip(){
 		Random randomGenerator = new Random();

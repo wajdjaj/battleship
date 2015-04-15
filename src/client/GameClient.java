@@ -63,7 +63,10 @@ public class GameClient implements Runnable {
 					playerTurn = false;
 				} else {
 					System.out.println("Waiting for turn");
-					fromServer.readLine();
+					if (fromServer.readLine().equals("Lose")){
+						System.out.println("You lose!");
+						break;
+					}
 					System.out.println("Finished waiting");
 					playerTurn = true;
 				}
@@ -113,10 +116,15 @@ public class GameClient implements Runnable {
 			System.out.println("Recived response from server");
 			if (result == null)
 				System.exit(1);
+			if (result.equals("Win")){
+				System.out.println("You scored a critical hit!");
+				System.out.println("You win");
+				System.exit(0);
+			}
 			if (result.equals("Success")){
 				System.out.println("You scored a critical hit!");
 				return true;
-			}
+			}			
 			if (result.equals("Invalid position")){
 				System.out.println("Invalid target");
 				return true;
