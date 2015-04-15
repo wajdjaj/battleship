@@ -65,7 +65,8 @@ public class GameServer implements Runnable{
 	void announceTurn(){
 		try{
 			PrintWriter toClient = new PrintWriter(players[currentPlayer].getOutputStream(),true);
-			toClient.println("Turn");			
+			toClient.println("Turn");	
+			System.out.println("Announced to player " + currentPlayer);
 		}catch(IOException e){
 			System.out.println("@announceTurn " + e);
 			System.exit(1);

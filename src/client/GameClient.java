@@ -32,7 +32,7 @@ public class GameClient implements Runnable {
 			if(socket.isConnected()){
 				System.out.println("Connected to server.");
 			}
-			while (placedShips < numberOfShips) {
+			while (placedShips < numberOfShips-1) {
 				do {
 					placement = getPlacement();
 				} while (!invalidPosition(placement));
@@ -45,19 +45,30 @@ public class GameClient implements Runnable {
 
 	}
 		
-	void play(){
+	void play() {
 		boolean gameEnd = false;
-		boolean playerTurn = true; //for now...
-		while (!gameEnd){
-			updateGameState();
-			if (playerTurn){
-				String target;
-				do{
-					target = getFirePosition(); // user pick desired square to shoot at;
-				}while(invalidPosition(target));
-			}else{
-				//Wait for opponent to finish
-			}				
+		boolean playerTurn = false; // for now...
+		try {
+			BufferedReader lbr = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			while (!gameEnd) {
+				updateGameState();
+				if (playerTurn) {
+					String target;
+					do {
+						target = getFirePosition(); // user pick desired square to shoot at;
+					} while (isHit(target));
+					playerTurn = false;
+				} else {
+					System.out.println("Waiting for turn");
+					lbr.readLine();
+					System.out.println("Finished waiting");
+					playerTurn = true;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("@play " + e);
+			System.exit(1);
 		}
 	}
 	
@@ -95,6 +106,15 @@ public class GameClient implements Runnable {
 	}
 	void updateGameState(){
 		
+	}
+	
+	boolean isHit(String target){
+		if (!invalidPosition(target)){
+			System.out.println("You scored a crictical hit!");
+			return true;
+		}
+		System.out.println("Invalid target");
+		return false;
 	}
 	
 	String getFirePosition(){

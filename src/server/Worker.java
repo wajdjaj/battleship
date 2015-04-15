@@ -25,7 +25,7 @@ public class Worker implements Runnable {
 			BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));			
 			int placedShips = 0;
 			String placement;
-			while ((placement = fromClient.readLine()) != null && placedShips != shipsToPlace){
+			while (placedShips < shipsToPlace-1 && (placement = fromClient.readLine()) != null){
 				//System.out.println("Worker is working. Just received line " + placement);
 				if (!placeShip(placement)){
 					toClient.println("Invalid position");
