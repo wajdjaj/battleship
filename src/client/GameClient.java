@@ -9,6 +9,8 @@ import java.net.Socket;
 
 public class GameClient implements Runnable {
 	Socket socket;
+	PrintWriter toServer;
+	BufferedReader fromServer;
 	final int numberOfShips = 7;
 	private final BufferedReader br;
 	public GameClient(){
@@ -31,8 +33,10 @@ public class GameClient implements Runnable {
 			socket = new Socket("localhost", 30000);
 			if(socket.isConnected()){
 				System.out.println("Connected to server.");
+				fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				toServer = new PrintWriter(socket.getOutputStream(), true);
 			}
-			while (placedShips < numberOfShips-1) {
+			while (placedShips < numberOfShips) {
 				do {
 					placement = getPlacement();
 				} while (!invalidPosition(placement));
@@ -49,8 +53,6 @@ public class GameClient implements Runnable {
 		boolean gameEnd = false;
 		boolean playerTurn = false; // for now...
 		try {
-			BufferedReader lbr = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
 			while (!gameEnd) {
 				updateGameState();
 				if (playerTurn) {
@@ -61,7 +63,7 @@ public class GameClient implements Runnable {
 					playerTurn = false;
 				} else {
 					System.out.println("Waiting for turn");
-					lbr.readLine();
+					fromServer.readLine();
 					System.out.println("Finished waiting");
 					playerTurn = true;
 				}
@@ -86,17 +88,12 @@ public class GameClient implements Runnable {
 			System.exit(1);
 		}
 		return null;
-		
 	}
 	
 	boolean invalidPosition(String placement) {
 		try {
-			PrintWriter toServer = new PrintWriter(socket.getOutputStream(),
-					true);
-			BufferedReader fromServer = new BufferedReader(
-					new InputStreamReader(socket.getInputStream()));
 			toServer.println(placement);
-			String result = fromServer.readLine();			
+			String result = fromServer.readLine();
 			return result.equals("Success");
 		} catch (IOException e) {
 			System.out.println("@invalidPosition " + e);
@@ -109,11 +106,26 @@ public class GameClient implements Runnable {
 	}
 	
 	boolean isHit(String target){
-		if (!invalidPosition(target)){
-			System.out.println("You scored a crictical hit!");
-			return true;
-		}
-		System.out.println("Invalid target");
+		try {			
+			toServer.println(target);
+			System.out.println("Waiting for server response");
+			String result = fromServer.readLine();	
+			System.out.println("Recived response from server");
+			if (result == null)
+				System.exit(1);
+			if (result.equals("Success")){
+				System.out.println("You scored a critical hit!");
+				return true;
+			}
+			if (result.equals("Invalid position")){
+				System.out.println("Invalid target");
+				return true;
+			}
+			System.out.println("Miss!");
+		} catch (IOException e) {
+			System.out.println("@isHit " + e);
+			System.exit(1);
+		}	
 		return false;
 	}
 	

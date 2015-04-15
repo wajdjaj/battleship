@@ -1,31 +1,30 @@
 package server;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class Worker implements Runnable {
 	private final CountDownLatch doneSignal;
-	private Socket socket;
+	PrintWriter toClient;
+	BufferedReader fromClient;
 	int board[][];
 	int numberOfShip[];
 	final int shipsToPlace = 7; 
-	Worker(Socket socket, int[][] board, CountDownLatch doneSignal) {
-		this.socket = socket;
+	Worker(PrintWriter toClient, BufferedReader fromClient, int[][] board, CountDownLatch doneSignal) {
+		this.toClient = toClient;
+		this.fromClient = fromClient;
 		this.doneSignal = doneSignal;
 		this.board = board;
 		numberOfShip = new int[] {2,2,2,1};
 	}
 
 	public void run() {
-		try{
-			PrintWriter toClient = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));			
+		try{		
 			int placedShips = 0;
 			String placement;
-			while (placedShips < shipsToPlace-1 && (placement = fromClient.readLine()) != null){
+			while (placedShips < shipsToPlace && (placement = fromClient.readLine()) != null){
 				//System.out.println("Worker is working. Just received line " + placement);
 				if (!placeShip(placement)){
 					toClient.println("Invalid position");
@@ -64,7 +63,8 @@ public class Worker implements Runnable {
 		}			
 		return false;
 	}
-	int charToInt(char in){		
+	static int charToInt(char in){		
+		
 		return Character.toLowerCase(in) - 'a';
 	}
 
