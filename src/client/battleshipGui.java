@@ -101,21 +101,25 @@ public class battleshipGui {
 	}
 
 	public JButton[][] fillGrid(JPanel jp) {
-		JLabel[] a_j = new JLabel[10];
+		JLabel[] a_j = new JLabel[11];
 		JLabel[] one_ten = new JLabel[11];
 		JButton[][] playBoard = new JButton[10][10];
-
-		for (int i = 0; i < 11; i++) {
-			for (int j = 0; j < 11; j++) {
-				if (i == 0) {
-					jp.add(one_ten[j]);
-					if(j != 0)	one_ten[j].setText(Integer.toString(j));
-				} else if (j == 1) {
-					jp.add(a_j[i - 1]);
-					char temp = (char) (i+64);
-					a_j[i].setText(Character.toString(temp));
-				} else {
-					jp.add(playBoard[i - 1][j - 1]);
+		
+		for (int i = 0; i < 11; i++){
+			one_ten[i] = new JLabel();
+			a_j[i] = new JLabel();
+			if (i > 0){
+				one_ten[i].setText(Integer.toString(i));
+				a_j[i].setText(Character.toString((char)('A'+i-1)));
+			}
+		}
+		for (int i = 0; i < 11; i++){
+			for (int j = 0; j < 11; j++){
+				if (i == 0) jp.add(one_ten[j]);				
+				else if (j == 0) jp.add(a_j[i]);
+				else{
+					playBoard[j-1][i-1] = new JButton();
+					jp.add(playBoard[j-1][i-1]);
 				}
 			}
 		}
