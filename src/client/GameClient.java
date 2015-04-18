@@ -13,12 +13,17 @@ public class GameClient implements Runnable {
 	BufferedReader fromServer;
 	final int numberOfShips = 7;
 	private final BufferedReader br;
+	GUI gui;
 	public GameClient(){
 		br = new BufferedReader(new InputStreamReader(System.in));
 	}
 	public GameClient(Reader r){
 		br = new BufferedReader(r);
 	}
+	public GameClient(GUI gui){
+		br = null;
+	}
+	
 	public static void main(String argv[]) {
 		new GameClient().run();
 	}
@@ -40,6 +45,7 @@ public class GameClient implements Runnable {
 				do {
 					placement = getPlacement();
 				} while (!invalidPosition(placement));
+				updateGameState(placement);
 				placedShips++;
 			}
 		} catch (IOException e) {
@@ -54,7 +60,6 @@ public class GameClient implements Runnable {
 		boolean playerTurn = false; // for now...
 		try {
 			while (!gameEnd) {
-				updateGameState();
 				if (playerTurn) {
 					String target;
 					do {
@@ -82,13 +87,17 @@ public class GameClient implements Runnable {
 	}
 
 	String getPlacement(){
-		// " (Length of the boat | cord1 | cord2 
-		try{
-			//System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
-			return br.readLine();
-		}catch(IOException e){
-			System.out.println("@getPlacement " + e);
-			System.exit(1);
+		// " (Length of the boat | cord1 | cord2
+		if (gui != null) {
+			return gui.getInput();
+		}else{
+			try {
+				// System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
+				return br.readLine();
+			} catch (IOException e) {
+				System.out.println("@getPlacement " + e);
+				System.exit(1);
+			}
 		}
 		return null;
 	}
@@ -104,16 +113,19 @@ public class GameClient implements Runnable {
 		}
 		return false;
 	}
-	void updateGameState(){
-		
+	void updateGameState(String update){
+		if (gui != null)
+			gui.updateBoardState(update);
 	}
 	
 	boolean isHit(String target){
 		try {			
 			toServer.println(target);
 			System.out.println("Waiting for server response");
-			String result = fromServer.readLine();	
+			String result = fromServer.readLine();
+			
 			System.out.println("Recived response from server");
+			updateGameState(target + result);
 			if (result == null)
 				System.exit(1);
 			if (result.equals("Win")){
