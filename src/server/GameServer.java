@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class Position{
 	int x, y;
@@ -16,10 +14,8 @@ class Position{
 }
 
 public class GameServer implements Runnable{
-	int board[][][] = new int[2][8][8]; //[player][x][y] 0 miss 1 hit 2 already taken
-	int numberOfHits[] = new int[]{0,0};
-	int necessaryHits = 16;
-	int currentPlayer;
+	Rulebook rules = new Rulebook();
+	private int currentPlayer;
 	BufferedReader fromClient[] = new BufferedReader[2];
 	PrintWriter toClient[] = new PrintWriter[2];
 	Socket players[] = new Socket[2];	
@@ -31,15 +27,11 @@ public class GameServer implements Runnable{
 		waitPlayers(30000); //input port number
 		waitClientBoardSetup();
 		currentPlayer = coinFlip();		
-		while (winner == -1){
+		while (!rules.isGameOver()){
 			announceTurn();			
-			while(targetHit()){
-				if (victory()){
-					winner = currentPlayer;
-					break;
-				}
+			while(gameRound()){				
 			}						
-			currentPlayer = -currentPlayer + 1; // changes between player 0 and 1.
+			changePlayer();
 		}
 		announceWinner(winner);
 	}
@@ -61,7 +53,7 @@ public class GameServer implements Runnable{
 	void waitClientBoardSetup(){
 		CountDownLatch doneSignal = new CountDownLatch(players.length);
 		for (int i = 0; i < players.length; i++){
-			new Thread(new Worker(toClient[i], fromClient[i],board[i], doneSignal)).start();
+			new Thread(new Worker(toClient[i], fromClient[i], rules, i, doneSignal)).start();
 		}
 		try {
 			doneSignal.await();
@@ -74,48 +66,28 @@ public class GameServer implements Runnable{
 			toClient[currentPlayer].println("Turn");	
 			System.out.println("Announced to player " + currentPlayer);
 	}
-
-	boolean targetHit() {
-		System.out.println("Initiating targeting systems");
-		Position p = null;		
-			do {
-				System.out.println("Waiting for input from user");
-				try{
-					p = stringToPosition(fromClient[currentPlayer].readLine());
-				}catch(IOException e){
-					System.out.println("@targetHit " + e);
-					System.exit(1);
-				}
-				System.out.println("Received response from user");
-				if (p == null ||
-						p.x > 7 || p.x < 0 || 
-						p.y > 7 || p.y < 0 || 
-						board[-currentPlayer + 1][p.x][p.y] == 2){					
-					toClient[currentPlayer].println("Invalid position");
-				}
-				else
+	
+	boolean gameRound(){
+		int p[];
+		try{
+			while(true){
+				p = Worker.stringToPosition(fromClient[currentPlayer].readLine());		
+				if (p != null && rules.targetIsValid(p, currentPlayer))
 					break;
-			} while (true);
-			System.out.println("x:"+ p.x + "y: " + p.y);
-			int state = board[-currentPlayer+1][p.x][p.y];
-			board[-currentPlayer+1][p.x][p.y] = 2;
-			if (state == 1){
-				numberOfHits[currentPlayer]++;
-				if (victory()){
-					toClient[currentPlayer].println("Win");
-					return true;
-				}
+				toClient[currentPlayer].println("Invalid position");
+			}
+			if (rules.targetIsHit(p, currentPlayer)){
 				toClient[currentPlayer].println("Success");
 				return true;
-			}				
-			toClient[currentPlayer].println("Miss");
+			}
+			else
+				toClient[currentPlayer].println("Miss");
+		}catch(IOException e){
+			System.out.println("@gameRound " + e);
+			System.exit(1);
+		}
 		return false;
 	}
-	
-	boolean victory(){
-		return numberOfHits[currentPlayer] == necessaryHits;
-	}
-	
 	
 	void announceWinner(int winner){
 		toClient[-winner+1].println("Lose");
@@ -124,25 +96,7 @@ public class GameServer implements Runnable{
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt(2);
 	}
-	public int[][] getBoard(int player){
-		return board[player];
+	void changePlayer(){
+		currentPlayer = -currentPlayer + 1;
 	}
-	
-	Position stringToPosition(String in){	
-		if (in == null)
-			return null;
-		Pattern pattern = Pattern.compile("(\\w\\d)");
-		Matcher matcher = pattern.matcher(in);
-		if (matcher.find()){
-			System.out.println(matcher.group(1).charAt(0));
-			int x = Worker.charToInt(matcher.group(1).charAt(0));
-			int y = Integer.parseInt(matcher.group(1).substring(1))-1;
-			System.out.println("stringToPosition");
-			System.out.println(x);
-			System.out.println(y);
-			return new Position(x,y);
-		}
-		return null;
-	}
-	
 }

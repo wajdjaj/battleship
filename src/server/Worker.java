@@ -9,32 +9,28 @@ public class Worker implements Runnable {
 	private final CountDownLatch doneSignal;
 	PrintWriter toClient;
 	BufferedReader fromClient;
-	int board[][];
-	int numberOfShip[];
-	final int shipsToPlace = 7; 
-	Worker(PrintWriter toClient, BufferedReader fromClient, int[][] board, CountDownLatch doneSignal) {
+	Rulebook rules;
+	int player;
+	Worker(PrintWriter toClient, BufferedReader fromClient, Rulebook rules, int player, CountDownLatch doneSignal) {
 		this.toClient = toClient;
 		this.fromClient = fromClient;
 		this.doneSignal = doneSignal;
-		this.board = board;
-		numberOfShip = new int[] {2,2,2,1};
+		this.rules = rules; 
+		this.player = player;
 	}
 
 	public void run() {
 		try{		
-			int placedShips = 0;
 			String placement;
-			while (placedShips < shipsToPlace && (placement = fromClient.readLine()) != null){
+			while (rules.shipsToPlace(player) && (placement = fromClient.readLine()) != null){
 				//System.out.println("Worker is working. Just received line " + placement);
-				if (!placeShip(placement)){
+				int p[] = getCoords(placement);
+				if (p == null || !rules.updatePlacement(p, player)){
 					toClient.println("Invalid position");
-					//System.out.println("Invalid position");
-				}
-				else{
-					placedShips++;
+					System.out.println("Invalid position");
+				}else{
 					System.out.println("Success");
 					toClient.println("Success");
-					//System.out.println("Placed boat at" + placement);
 				}
 			}
 			doneSignal.countDown();
@@ -44,57 +40,37 @@ public class Worker implements Runnable {
 		}
 	}
 	
-	boolean placeShip(String placement){
-		Pattern pattern = Pattern.compile("(\\d) ([a-hA-H][\\d]) ([a-hA-H][\\d])");
-		Matcher matcher = pattern.matcher(placement);
+	int[] getCoords(String placement){
 		int p[] = new int[4];
-		if (matcher.find()){
-			int size = Integer.parseInt(matcher.group(1));
+		if (placement.length() > 4){
 			for (int i = 0; i < 2; i++){
-				p[i*2] = charToInt(matcher.group(i+2).charAt(0));
-				p[i*2+1] = Integer.parseInt(matcher.group(i+2).substring(1))-1;
-			}			
-			for (int i = 0; i < 4; i++){
-				if (p[i] >= 8 && p[i] < 0) // if position is outside allowed region return false
-					return false;
-			}			
-			if (p[0] == p[2] && Math.abs(p[1]-p[3])+1 == size) return addShipToBoard(size, p);
-			if (p[1] == p[3] && Math.abs(p[0]-p[2])+1 == size) return addShipToBoard(size, p);
-		}			
-		return false;
+				int tmp[];
+				if ((tmp = stringToPosition(placement.substring(i*2))) == null)
+					return null;
+				p[i*2] = tmp[0];
+				p[i*2+1] = tmp[1];
+			}
+			return p;
+		}
+		return null;
 	}
+	
+	
+	public static int[] stringToPosition(String in){	
+		if (in == null)
+			return null;
+		Pattern pattern = Pattern.compile("(\\w\\d)");
+		Matcher matcher = pattern.matcher(in);
+		if (matcher.find()){			
+			int p[] = new int[2];
+			p[0] = Integer.parseInt(matcher.group(1).substring(1))-1;
+			p[1] = charToInt(matcher.group(1).charAt(0));
+			return p;
+		}
+		return null;
+	}
+	
 	static int charToInt(char in){		
-		
 		return Character.toLowerCase(in) - 'a';
-	}
-
-	boolean addShipToBoard(int size, int p[]) {
-		size = size - 1; // reducing size in order for it to work as an index
-		if (size < 1 && size > 4)
-			return false;
-		if (numberOfShip[size] < 1)
-			return false;
-		int divide = size;
-		if (size == 0)
-			divide = 1;
-		int changeX = (p[2] - p[0]) / divide;
-		int changeY = (p[3] - p[1]) / divide;
-		int currentX = p[0];
-		int currentY = p[1];
-		for (int i = 0; i <= size; i++) {
-			if (board[currentX][currentY] != 0)
-				return false;
-			currentX += changeX;
-			currentY += changeY;
-		}
-		currentX = p[0];
-		currentY = p[1];
-		for (int i = 0; i <= size; i++) {
-			board[currentX][currentY] = 1;
-			currentX += changeX;
-			currentY += changeY;
-		}
-		numberOfShip[size]--;
-		return true;
 	}
 }
