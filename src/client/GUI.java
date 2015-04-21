@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,7 +16,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.border.LineBorder;
 
 public class GUI {
-	
+	JButton[][][] boards;
 	private JFrame frame;
 	private StringWrapper mouseString;
 	/**
@@ -38,6 +39,7 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
+		boards = new JButton[2][10][10];
 		mouseString = new StringWrapper();
 		initialize();
 	}
@@ -77,7 +79,7 @@ public class GUI {
 		playerGrid.setBounds(10, 45, 300, 300);
 		playerView.add(playerGrid);
 		playerGrid.setLayout(new GridLayout(11, 11, 0, 0));
-		JButton[][] playBoard = fillGrid(playerGrid, 0);
+		boards[0] = fillGrid(playerGrid, 0);
 		
 		JPanel buttonPanelviewOne = new JPanel();
 		buttonPanelviewOne.setBounds(320, 0, 245, 480);
@@ -93,7 +95,7 @@ public class GUI {
 		opponentGrid.setBounds(10, 45, 300, 300);
 		opponentView.add(opponentGrid);
 		opponentGrid.setLayout(new GridLayout(11, 11, 0, 0));
-		JButton[][] opponentBoard = fillGrid(opponentGrid, 1);
+		boards[1] = fillGrid(opponentGrid, 1);
 
 		JPanel buttonPanelviewTwo = new JPanel();
 		buttonPanelviewTwo.setBounds(320, 0, 245, 480);
@@ -147,8 +149,37 @@ public class GUI {
 		return null;
 	}
 	//string containing information about what part of the board to update
-	void updateBoardState(String update){
-		
+	void updateBoardState(int p[], int state[]){
+		System.out.println("updateBoardStat state0: " + state[0] + " state1: " + state[1]);
+		if (state[1] == 1 && p != null){
+			if (state[0] == 0){
+				redrawBoard(0, p);
+			}
+			else if (state[0] == 1){
+				redrawBoard(1, p);
+			}
+		}
+			
+	}
+
+	private void redrawBoard(int player, int[] p) {
+		for (int i = 0; i < p.length; i++)
+			System.out.println(p[i]);
+		if (p.length <= 2 || (p[2]-p[0] == 0 && p[3]-p[1] == 0)){
+			boards[player][p[0]][p[1]].setBackground(Color.black);
+			return;
+		}
+		int dx = p[2] - p[0];
+		int dy = p[3] - p[1];
+		int size = Math.max(Math.abs(dx), Math.abs(dy));
+		if (dx != 0) dx = dx/size;
+		else dy = dy/size;
+		for (int i = 0; i <= size; i++){
+			boards[player][p[0]][p[1]].setBackground(Color.black);
+			p[0] += dx;
+			p[1] += dy;
+			System.out.println(String.format("redrawBoard x: %d y: %d size %d dx: %d dy %d", p[0], p[1], size, dx, dy));
+		}			
 	}
 }
 
