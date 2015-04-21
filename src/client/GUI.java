@@ -135,12 +135,14 @@ public class GUI {
 		return playBoard;
 	}
 	//get input
-	public String getInput(){
+	public String getInput(int player){
 		synchronized(mouseString){
 			try {
+				do{
 				mouseString.wait();
 				System.out.println(mouseString.input);
-				return mouseString.input;
+				}while (Integer.parseInt(mouseString.input.substring(0,1)) != player);
+				return mouseString.input.substring(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -152,12 +154,7 @@ public class GUI {
 	void updateBoardState(int p[], int state[]){
 		System.out.println("updateBoardStat state0: " + state[0] + " state1: " + state[1]);
 		if (state[1] == 1 && p != null){
-			if (state[0] == 0){
-				redrawBoard(0, p);
-			}
-			else if (state[0] == 1){
-				redrawBoard(1, p);
-			}
+			redrawBoard(state[0], p);
 		}
 			
 	}
@@ -184,22 +181,21 @@ public class GUI {
 }
 
 class MouseHandler extends MouseAdapter{
-	private int x, y, player;
+	private int x, y, lplayer;
 	private StringWrapper mouseString;
-	public MouseHandler(int y,int x, int player, StringWrapper mouseString){
+	public MouseHandler(int y,int x, int lplayer, StringWrapper mouseString){
 		super();
 		this.x = x;
 		this.y = y;
-		this.player = player;
+		this.lplayer = lplayer;
 		this.mouseString = mouseString;	
 	}
-	public void mouseClicked(MouseEvent evt){
-		if (player == 0){
-			synchronized(mouseString){
-				mouseString.input = String.format("%c%d",intToChar(y), x);
-				mouseString.notifyAll();
-			}
-		}			
+
+	public void mouseClicked(MouseEvent evt) {
+		synchronized (mouseString) {
+			mouseString.input = String.format("%d %c%d", lplayer, intToChar(y), x);
+			mouseString.notifyAll();
+		}
 	}
 	private char intToChar(int in){
 		return (char)((int)'a'+in);

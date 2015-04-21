@@ -100,7 +100,7 @@ public class GameClient implements Runnable {
 	String getPlacement(){
 		// " (Length of the boat | cord1 | cord2
 		if (gui != null) {
-			return gui.getInput() + " " +gui.getInput();
+			return gui.getInput(0) + " " +gui.getInput(0);
 		}else{
 			try {
 				// System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
@@ -130,12 +130,13 @@ public class GameClient implements Runnable {
 		if (gui != null){
 			int p[];
 			int state[] = new int[2];
-			if (placement.length() > 2){
+			if (placement.length() > 3){
 				p = Worker.getCoords(placement);
 				state[0] = 0;
 				state[1] = status;
 			}
 			else{
+				System.out.println("updateGameState single");
 				p = Worker.stringToPosition(placement);
 				state[0] = 1;
 				state[1] = status;
@@ -179,7 +180,7 @@ public class GameClient implements Runnable {
 	
 	String getFirePosition(){
 		if (gui != null)
-			return gui.getInput();
+			return gui.getInput(1);
 		else 
 			return getPlacement();
 	}

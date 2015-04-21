@@ -13,7 +13,7 @@ public class GUITest {
 		GUI gui = new GUI();
 		gui.start();
 		while(true)
-			gui.getInput();		
+			gui.getInput(0);		
 	}
 
 }
