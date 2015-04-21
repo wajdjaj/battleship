@@ -74,7 +74,7 @@ public class GameServer implements Runnable{
 				p = Worker.stringToPosition(fromClient[currentPlayer].readLine());		
 				if (p != null && rules.targetIsValid(p, currentPlayer))
 					break;
-				toClient[currentPlayer].println("Invalid position");
+				toClient[currentPlayer].println("Invalid");
 			}
 			if (rules.targetIsHit(p, currentPlayer)){
 				toClient[currentPlayer].println("Success");

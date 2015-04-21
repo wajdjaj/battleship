@@ -7,11 +7,14 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.Socket;
 
+import server.Worker;
+
 public class GameClient implements Runnable {
 	Socket socket;
 	PrintWriter toServer;
 	BufferedReader fromServer;
 	final int numberOfShips = 7;
+	String updates;
 	private final BufferedReader br;
 	GUI gui;
 	public GameClient(){
@@ -44,10 +47,16 @@ public class GameClient implements Runnable {
 				toServer = new PrintWriter(socket.getOutputStream(), true);
 			}
 			while (placedShips < numberOfShips) {
+				boolean deployed = false;
 				do {
 					placement = getPlacement();
-				} while (!invalidPosition(placement));
-				updateGameState(placement);
+					deployed = validPosition(placement);
+					System.out.println(deployed);
+					
+					if (!deployed)
+						updateGameState(placement, 0);
+				} while (!deployed);
+				updateGameState(placement, 1);
 				placedShips++;
 			}
 		} catch (IOException e) {
@@ -104,7 +113,7 @@ public class GameClient implements Runnable {
 		return null;
 	}
 	
-	boolean invalidPosition(String placement) {
+	boolean validPosition(String placement) {
 		try {
 			toServer.println(placement);
 			String result = fromServer.readLine();
@@ -117,9 +126,22 @@ public class GameClient implements Runnable {
 		}
 		return false;
 	}
-	void updateGameState(String update){
-		if (gui != null)
-			gui.updateBoardState(update);
+	void updateGameState(String placement, int status){
+		if (gui != null){
+			int p[];
+			int state[] = new int[2];
+			if (placement.length() > 2){
+				p = Worker.getCoords(placement);
+				state[0] = 0;
+				state[1] = status;
+			}
+			else{
+				p = Worker.stringToPosition(placement);
+				state[0] = 1;
+				state[1] = status;
+			}
+			gui.updateBoardState(p, state);
+		}
 	}
 	
 	boolean isHit(String target){
@@ -129,7 +151,6 @@ public class GameClient implements Runnable {
 			String result = fromServer.readLine();
 			
 			System.out.println("Recived response from server");
-			updateGameState(target + result);
 			if (result == null)
 				System.exit(1);
 			if (result.equals("Win")){
@@ -139,13 +160,16 @@ public class GameClient implements Runnable {
 			}
 			if (result.equals("Success")){
 				System.out.println("You scored a critical hit!");
+				updateGameState(target, 1);
 				return true;
 			}			
 			if (result.equals("Invalid position")){
 				System.out.println("Invalid target");
+				updateGameState(target,-1);
 				return true;
 			}
 			System.out.println("Miss!");
+			updateGameState(target, 0);
 		} catch (IOException e) {
 			System.out.println("@isHit " + e);
 			System.exit(1);

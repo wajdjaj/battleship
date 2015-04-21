@@ -26,7 +26,7 @@ public class Worker implements Runnable {
 				//System.out.println("Worker is working. Just received line " + placement);
 				int p[] = getCoords(placement);
 				if (p == null || !rules.updatePlacement(p, player)){
-					toClient.println("Invalid position");
+					toClient.println("Placement Invalid");
 					System.out.println("Invalid position");
 				}else{
 					System.out.println("Success");
@@ -40,7 +40,7 @@ public class Worker implements Runnable {
 		}
 	}
 	
-	int[] getCoords(String placement){
+	public static int[] getCoords(String placement){
 		int p[] = new int[4];
 		if (placement.length() > 4){
 			for (int i = 0; i < 2; i++){
@@ -55,15 +55,14 @@ public class Worker implements Runnable {
 		return null;
 	}
 	
-	
 	public static int[] stringToPosition(String in){	
 		if (in == null)
 			return null;
-		Pattern pattern = Pattern.compile("(\\w\\d)");
+		Pattern pattern = Pattern.compile("(\\w\\d+)");
 		Matcher matcher = pattern.matcher(in);
 		if (matcher.find()){			
 			int p[] = new int[2];
-			p[0] = Integer.parseInt(matcher.group(1).substring(1))-1;
+			p[0] = Integer.parseInt(matcher.group(1).substring(1))-1;			
 			p[1] = charToInt(matcher.group(1).charAt(0));
 			return p;
 		}
