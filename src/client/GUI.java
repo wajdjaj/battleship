@@ -74,27 +74,25 @@ public class GUI {
 		bodyPanel.add(playerView);
 		playerView.setLayout(null);
 
-		JPanel playerGrid = new JPanel();
-		playerGrid.setBorder(new LineBorder(new Color(0, 0, 0)));
-		playerGrid.setBounds(10, 45, 300, 300);
+		JPanel playerGrid = createGrid();
 		playerView.add(playerGrid);
-		playerGrid.setLayout(new GridLayout(11, 11, 0, 0));
 		boards[0] = fillGrid(playerGrid, 0);
 		
 		JPanel buttonPanelviewOne = new JPanel();
 		buttonPanelviewOne.setBounds(320, 0, 245, 480);
 		bodyPanel.add(buttonPanelviewOne);
+		JButton battleship = new JButton("Battleship");
+		JButton cruiser = new JButton("Cruiser");
+		buttonPanelviewOne.add(battleship);
+		buttonPanelviewOne.add(cruiser);
 
 		JPanel opponentView = new JPanel();
 		opponentView.setBounds(565, 0, 320, 480);
 		bodyPanel.add(opponentView);
 		opponentView.setLayout(null);
 
-		JPanel opponentGrid = new JPanel();
-		opponentGrid.setBorder(new LineBorder(new Color(0, 0, 0)));
-		opponentGrid.setBounds(10, 45, 300, 300);
+		JPanel opponentGrid = createGrid();
 		opponentView.add(opponentGrid);
-		opponentGrid.setLayout(new GridLayout(11, 11, 0, 0));
 		boards[1] = fillGrid(opponentGrid, 1);
 
 		JPanel buttonPanelviewTwo = new JPanel();
@@ -104,6 +102,14 @@ public class GUI {
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBounds(0, 0, 900, 120);
 
+	}
+	
+	private JPanel createGrid() {
+		JPanel grid = new JPanel();
+		grid.setBorder(new LineBorder(new Color(0, 0, 0)));
+		grid.setBounds(10, 45, 300, 300);
+		grid.setLayout(new GridLayout(11, 11, 0, 0));
+		return grid;
 	}
 //player Player = 0 Opponent = 1
 	public JButton[][] fillGrid(JPanel jp, int player) {
