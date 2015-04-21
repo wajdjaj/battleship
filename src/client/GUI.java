@@ -139,10 +139,10 @@ public class GUI {
 		synchronized(mouseString){
 			try {
 				do{
-				mouseString.wait();
-				System.out.println(mouseString.input);
-				}while (Integer.parseInt(mouseString.input.substring(0,1)) != player);
-				return mouseString.input.substring(1);
+					mouseString.wait();
+					System.out.println(mouseString.input);
+				}while (Character.getNumericValue(mouseString.input.charAt(0)) != player);
+				return mouseString.input.substring(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -152,7 +152,6 @@ public class GUI {
 	}
 	//string containing information about what part of the board to update
 	void updateBoardState(int p[], int state[]){
-		System.out.println("updateBoardStat state0: " + state[0] + " state1: " + state[1]);
 		if (state[1] == 1 && p != null){
 			redrawBoard(state[0], p);
 		}
@@ -160,8 +159,7 @@ public class GUI {
 	}
 
 	private void redrawBoard(int player, int[] p) {
-		for (int i = 0; i < p.length; i++)
-			System.out.println(p[i]);
+		System.out.println("Redraw board at x = " + p[0] + " y = " + p[1]);
 		if (p.length <= 2 || (p[2]-p[0] == 0 && p[3]-p[1] == 0)){
 			boards[player][p[0]][p[1]].setBackground(Color.black);
 			return;
@@ -175,7 +173,6 @@ public class GUI {
 			boards[player][p[0]][p[1]].setBackground(Color.black);
 			p[0] += dx;
 			p[1] += dy;
-			System.out.println(String.format("redrawBoard x: %d y: %d size %d dx: %d dy %d", p[0], p[1], size, dx, dy));
 		}			
 	}
 }

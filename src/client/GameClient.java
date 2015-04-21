@@ -50,8 +50,7 @@ public class GameClient implements Runnable {
 				boolean deployed = false;
 				do {
 					placement = getPlacement();
-					deployed = validPosition(placement);
-					System.out.println(deployed);
+					deployed = validPosition(placement);					
 					
 					if (!deployed)
 						updateGameState(placement, 0);
@@ -75,13 +74,18 @@ public class GameClient implements Runnable {
 					String target;
 					do {
 						target = getFirePosition(); // user pick desired square to shoot at;
+						System.out.println("Recived position: " + target);
 					} while (isHit(target));
 					playerTurn = false;
 				} else {
 					System.out.println("Waiting for turn");
-					if (fromServer.readLine().equals("Lose")){
-						System.out.println("You lose!");
-						break;
+					String input;
+					while ((input = fromServer.readLine()) != null && !input.equals("Turn")){
+						if (input.equals("Lose")){
+							System.out.println("You lose!");
+							break;
+						}
+						updateGameState(input + " " + input, 1);
 					}
 					System.out.println("Finished waiting");
 					playerTurn = true;
@@ -92,10 +96,6 @@ public class GameClient implements Runnable {
 			System.exit(1);
 		}
 	}
-	
-	int[] getShipTypes(){
-		return null;
-	}
 
 	String getPlacement(){
 		// " (Length of the boat | cord1 | cord2
@@ -103,7 +103,6 @@ public class GameClient implements Runnable {
 			return gui.getInput(0) + " " +gui.getInput(0);
 		}else{
 			try {
-				// System.out.println("Where do you want to place the goat? (ex: 2, A1, A2)");
 				return br.readLine();
 			} catch (IOException e) {
 				System.out.println("@getPlacement " + e);
@@ -164,7 +163,7 @@ public class GameClient implements Runnable {
 				updateGameState(target, 1);
 				return true;
 			}			
-			if (result.equals("Invalid position")){
+			if (result.equals("Invalid")){
 				System.out.println("Invalid target");
 				updateGameState(target,-1);
 				return true;

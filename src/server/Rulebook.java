@@ -42,12 +42,14 @@ public class Rulebook {
 	public boolean targetIsHit(int p[], int player){		
 		int tmp = boards[-player+1][p[0]][p[1]];
 		boards[-player+1][p[0]][p[1]] = 2;
+		if (tmp == 1) shipRemain[-player + 1]--;
 		return tmp == 1;
 	}
 	
 	public boolean isGameOver(){
 		for (int i = 0; i < 2; i++){
-			if (shipRemain[i] == 0)
+			System.out.println("Number of ships remaining: " + shipRemain[i]);
+			if (shipRemain[i] <= 0)
 				return true;
 		}
 		return false;

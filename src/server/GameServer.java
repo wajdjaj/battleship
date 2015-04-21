@@ -23,17 +23,15 @@ public class GameServer implements Runnable{
 		new GameServer().run();
 	}
 	public void run(){
-		int winner = -1;
 		waitPlayers(30000); //input port number
 		waitClientBoardSetup();
 		currentPlayer = coinFlip();		
 		while (!rules.isGameOver()){
 			announceTurn();			
-			while(gameRound()){				
-			}						
+			while(gameRound());						
 			changePlayer();
 		}
-		announceWinner(winner);
+		announceWinner(-currentPlayer + 1);
 	}
 	
 	void waitPlayers(int port){
@@ -70,18 +68,27 @@ public class GameServer implements Runnable{
 	boolean gameRound(){
 		int p[];
 		try{
+			String target;
 			while(true){
-				p = Worker.stringToPosition(fromClient[currentPlayer].readLine());		
+				target = fromClient[currentPlayer].readLine();
+				p = Worker.stringToPosition(target);		
 				if (p != null && rules.targetIsValid(p, currentPlayer))
 					break;
 				toClient[currentPlayer].println("Invalid");
 			}
 			if (rules.targetIsHit(p, currentPlayer)){
+				if (rules.isGameOver()){
+					toClient[currentPlayer].println("Win");
+					return false;
+				}					
 				toClient[currentPlayer].println("Success");
+				toClient[-currentPlayer + 1].println(target);
 				return true;
 			}
-			else
+			else{
 				toClient[currentPlayer].println("Miss");
+				toClient[-currentPlayer + 1].println(target);
+			}
 		}catch(IOException e){
 			System.out.println("@gameRound " + e);
 			System.exit(1);
@@ -91,6 +98,7 @@ public class GameServer implements Runnable{
 	
 	void announceWinner(int winner){
 		toClient[-winner+1].println("Lose");
+		toClient[winner].println("Win");
 	}
 	int coinFlip(){
 		Random randomGenerator = new Random();
