@@ -50,12 +50,9 @@ public class GameClient implements Runnable {
 				boolean deployed = false;
 				do {
 					placement = getPlacement();
-					deployed = validPosition(placement);					
-					
-					if (!deployed)
-						updateGameState(placement, 0);
+					deployed = validPosition(placement);					;
 				} while (!deployed);
-				updateGameState(placement, 1);
+				updateGameState(placement,0, 1);
 				placedShips++;
 			}
 		} catch (IOException e) {
@@ -85,7 +82,9 @@ public class GameClient implements Runnable {
 							System.out.println("You lose!");
 							break;
 						}
-						updateGameState(input + " " + input, 1);
+						System.out.println("Received from server: " + input);
+						if (input.contains("Hit")) updateGameState(input.substring(4), 0, 1);
+						else updateGameState(input, 0, 0);
 					}
 					System.out.println("Finished waiting");
 					playerTurn = true;
@@ -125,7 +124,7 @@ public class GameClient implements Runnable {
 		}
 		return false;
 	}
-	void updateGameState(String placement, int status){
+	void updateGameState(String placement, int board, int status){
 		if (gui != null){
 			int p[];
 			int state[] = new int[2];
@@ -137,7 +136,7 @@ public class GameClient implements Runnable {
 			else{
 				System.out.println("updateGameState single");
 				p = Worker.stringToPosition(placement);
-				state[0] = 1;
+				state[0] = board;
 				state[1] = status;
 			}
 			gui.updateBoardState(p, state);
@@ -160,16 +159,16 @@ public class GameClient implements Runnable {
 			}
 			if (result.equals("Success")){
 				System.out.println("You scored a critical hit!");
-				updateGameState(target, 1);
+				updateGameState(target,1 ,1);
 				return true;
 			}			
 			if (result.equals("Invalid")){
 				System.out.println("Invalid target");
-				updateGameState(target,-1);
+				updateGameState(target, 1,-1);
 				return true;
 			}
 			System.out.println("Miss!");
-			updateGameState(target, 0);
+			updateGameState(target, 1, 0);
 		} catch (IOException e) {
 			System.out.println("@isHit " + e);
 			System.exit(1);

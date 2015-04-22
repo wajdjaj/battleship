@@ -157,26 +157,34 @@ public class GUI {
 		return null;
 	}
 	//string containing information about what part of the board to update
-	void updateBoardState(int p[], int state[]){
-		if (state[1] == 1 && p != null){
-			redrawBoard(state[0], p);
+	void updateBoardState(int p[], int state[]) {
+		if (state[1] == -1 || p == null)
+			return;
+		if (p.length <= 2) { // if fire
+			Color color;
+			if (state[0] == 0 && state[1] == 1) color = Color.red; // player hit
+			else if (state[0] == 1 && state[1] == 1) color = Color.green; // opponent hit
+			else color = Color.black;			
+			drawFire(p, state[0], color);
+		} else if (p.length == 4) {
+			drawPlacement(p, state[0]);
 		}
-			
 	}
 
-	private void redrawBoard(int player, int[] p) {
-		System.out.println("Redraw board at x = " + p[0] + " y = " + p[1]);
-		if (p.length <= 2 || (p[2]-p[0] == 0 && p[3]-p[1] == 0)){
-			boards[player][p[0]][p[1]].setBackground(Color.black);
-			return;
-		}
+	private void drawFire(int p[], int player, Color color) {
+		boards[player][p[0]][p[1]].setBackground(color);
+		return;
+	}
+	
+	private void drawPlacement(int p[], int player){
 		int dx = p[2] - p[0];
-		int dy = p[3] - p[1];
+		int dy = p[3] - p[1];		
 		int size = Math.max(Math.abs(dx), Math.abs(dy));
-		if (dx != 0) dx = dx/size;
-		else dy = dy/size;
+		if (size == 0) size = 1;
+		dx = dx/size;
+		dy = dy/size;
 		for (int i = 0; i <= size; i++){
-			boards[player][p[0]][p[1]].setBackground(Color.black);
+			boards[player][p[0]][p[1]].setBackground(Color.cyan);
 			p[0] += dx;
 			p[1] += dy;
 		}			
