@@ -2,6 +2,7 @@ package client;
 
 import java.awt.EventQueue;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -132,7 +133,9 @@ public class GUI {
 				if (i == 0) jp.add(one_ten[j]);				
 				else if (j == 0) jp.add(a_j[i]);
 				else{
-					playBoard[j-1][i-1] = new JButton();
+					ImageIcon water = new ImageIcon("water.jpg");
+					playBoard[j-1][i-1] = new JButton(water);
+					
 					playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
 					jp.add(playBoard[j-1][i-1]);
 				}
