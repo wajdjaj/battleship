@@ -20,6 +20,7 @@ public class GUI {
 	JButton[][][] boards;
 	private JFrame frame;
 	private StringWrapper mouseString;
+
 	/**
 	 * Launch the application.
 	 */
@@ -44,7 +45,8 @@ public class GUI {
 		mouseString = new StringWrapper();
 		initialize();
 	}
-	public void start(){
+
+	public void start() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -78,14 +80,6 @@ public class GUI {
 		JPanel playerGrid = createGrid();
 		playerView.add(playerGrid);
 		boards[0] = fillGrid(playerGrid, 0);
-		
-		JPanel buttonPanelviewOne = new JPanel();
-		buttonPanelviewOne.setBounds(320, 0, 245, 480);
-		bodyPanel.add(buttonPanelviewOne);
-		JButton battleship = new JButton("Battleship");
-		JButton cruiser = new JButton("Cruiser");
-		buttonPanelviewOne.add(battleship);
-		buttonPanelviewOne.add(cruiser);
 
 		JPanel opponentView = new JPanel();
 		opponentView.setBounds(565, 0, 320, 480);
@@ -96,6 +90,13 @@ public class GUI {
 		opponentView.add(opponentGrid);
 		boards[1] = fillGrid(opponentGrid, 1);
 
+		JPanel buttonPanelviewOne = new JPanel();
+		buttonPanelviewOne.setBounds(320, 0, 245, 480);
+		bodyPanel.add(buttonPanelviewOne);
+
+		buttonPanelviewOne.setLayout(new GridLayout(7, 2, 20, 5));
+		JButton[] ships = generateShipButtons(buttonPanelviewOne);
+
 		JPanel buttonPanelviewTwo = new JPanel();
 		buttonPanelviewTwo.setBounds(320, 0, 245, 480);
 		bodyPanel.add(buttonPanelviewTwo);
@@ -104,7 +105,36 @@ public class GUI {
 		headerPanel.setBounds(0, 0, 900, 120);
 
 	}
-	
+
+	private JButton[] generateShipButtons(JPanel parent) {
+		JButton[] ships = new JButton[4];
+		parent.add(new JPanel());
+		parent.add(new JPanel());
+
+		for (int i = 1; i <= 4; i++) {
+			ships[i - 1] = new JButton("Ship" + i);
+			parent.add(ships[i - 1]);
+			parent.add(generateShipBoxes(i));
+		}
+		return ships;
+	}
+
+	private JPanel generateShipBoxes(int shipNumber) {
+		JPanel shipBoxes = new JPanel();
+		shipBoxes.setLayout(new GridLayout(1, 3, 5, 1));
+		for (int i = 0; i <= 6; i++) {
+			if (i != 0 && i <= shipNumber) {
+				JPanel boxPanel = new JPanel();
+				boxPanel.setBounds(0,0,10,10);
+				boxPanel.setBackground(Color.BLACK);
+				shipBoxes.add(boxPanel);
+			} else {
+				shipBoxes.add(new JPanel());
+			}
+		}
+		return shipBoxes;
+	}
+
 	private JPanel createGrid() {
 		JPanel grid = new JPanel();
 		grid.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -112,20 +142,21 @@ public class GUI {
 		grid.setLayout(new GridLayout(11, 11, 0, 0));
 		return grid;
 	}
-//player Player = 0 Opponent = 1
+
+	// player Player = 0 Opponent = 1
 	public JButton[][] fillGrid(JPanel jp, int player) {
 		JLabel[] a_j = new JLabel[11];
 		JLabel[] one_ten = new JLabel[11];
 		JButton[][] playBoard = new JButton[10][10];
-		
-		for (int i = 0; i < 11; i++){
+
+		for (int i = 0; i < 11; i++) {
 			one_ten[i] = new JLabel();
 			one_ten[i].setHorizontalAlignment(SwingConstants.CENTER);
 			a_j[i] = new JLabel();
 			a_j[i].setHorizontalAlignment(SwingConstants.CENTER);
-			if (i > 0){
+			if (i > 0) {
 				one_ten[i].setText(Integer.toString(i));
-				a_j[i].setText(Character.toString((char)('A'+i-1)));
+				a_j[i].setText(Character.toString((char) ('A' + i - 1)));
 			}
 		}
 		for (int i = 0; i < 11; i++){
@@ -143,22 +174,24 @@ public class GUI {
 		}
 		return playBoard;
 	}
-	//get input
-	public String getInput(int player){
-		synchronized(mouseString){
+
+	// get input
+	public String getInput(int player) {
+		synchronized (mouseString) {
 			try {
-				do{
+				do {
 					mouseString.wait();
 					System.out.println(mouseString.input);
-				}while (Character.getNumericValue(mouseString.input.charAt(0)) != player);
+				} while (Character.getNumericValue(mouseString.input.charAt(0)) != player);
 				return mouseString.input.substring(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(1);
 			}
-		}		
+		}
 		return null;
 	}
+
 	//string containing information about what part of the board to update
 	void updateBoardState(int p[], int state[]) {
 		if (state[1] == -1 || p == null)
@@ -190,33 +223,36 @@ public class GUI {
 			boards[player][p[0]][p[1]].setBackground(Color.cyan);
 			p[0] += dx;
 			p[1] += dy;
-		}			
+		}
 	}
 }
 
-class MouseHandler extends MouseAdapter{
+class MouseHandler extends MouseAdapter {
 	private int x, y, lplayer;
 	private StringWrapper mouseString;
-	public MouseHandler(int y,int x, int lplayer, StringWrapper mouseString){
+
+	public MouseHandler(int y, int x, int lplayer, StringWrapper mouseString) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.lplayer = lplayer;
-		this.mouseString = mouseString;	
+		this.mouseString = mouseString;
 	}
 
 	public void mouseClicked(MouseEvent evt) {
 		synchronized (mouseString) {
-			mouseString.input = String.format("%d %c%d", lplayer, intToChar(y), x);
+			mouseString.input = String.format("%d %c%d", lplayer, intToChar(y),
+					x);
 			mouseString.notifyAll();
 		}
 	}
-	private char intToChar(int in){
-		return (char)((int)'a'+in);
+
+	private char intToChar(int in) {
+		return (char) ((int) 'a' + in);
 	}
 }
 
-class StringWrapper{ //This construct is necessary for the wait/notify mechanism used in MouseHandler and getInput to work
-	String input;	
+class StringWrapper { // This construct is necessary for the wait/notify
+						// mechanism used in MouseHandler and getInput to work
+	String input;
 }
-
