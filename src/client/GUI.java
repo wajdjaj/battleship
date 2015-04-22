@@ -112,7 +112,8 @@ public class GUI {
 		parent.add(new JPanel());
 
 		for (int i = 1; i <= 4; i++) {
-			ships[i - 1] = new JButton("Ship" + i);
+			ImageIcon ship4 = new ImageIcon("ship" + i +".png");
+			ships[i - 1] = new JButton(ship4);
 			parent.add(ships[i - 1]);
 			parent.add(generateShipBoxes(i));
 		}
