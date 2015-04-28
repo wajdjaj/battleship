@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -100,6 +101,8 @@ public class GUI {
 		JPanel buttonPanelviewTwo = new JPanel();
 		buttonPanelviewTwo.setBounds(320, 0, 245, 480);
 		bodyPanel.add(buttonPanelviewTwo);
+		buttonPanelviewTwo.setLayout(new BorderLayout());
+		//GÖR SKIT HÄR FÖR GAME-VIEW!
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBounds(0, 0, 900, 120);
@@ -122,11 +125,11 @@ public class GUI {
 
 	private JPanel generateShipBoxes(int shipNumber) {
 		JPanel shipBoxes = new JPanel();
-		shipBoxes.setLayout(new GridLayout(1, 3, 5, 1));
+		shipBoxes.setLayout(null);
 		for (int i = 0; i <= 6; i++) {
 			if (i != 0 && i <= shipNumber) {
 				JPanel boxPanel = new JPanel();
-				boxPanel.setBounds(0,0,10,10);
+				boxPanel.setBounds(0+(30*(i-1)),20,25,25);
 				boxPanel.setBackground(Color.BLACK);
 				shipBoxes.add(boxPanel);
 			} else {
