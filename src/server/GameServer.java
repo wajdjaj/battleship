@@ -82,7 +82,7 @@ public class GameServer implements Runnable{
 					return false;
 				}					
 				toClient[currentPlayer].println("Success");
-				toClient[-currentPlayer + 1].println(target);
+				toClient[-currentPlayer + 1].println("Hit " + target);
 				return true;
 			}
 			else{
