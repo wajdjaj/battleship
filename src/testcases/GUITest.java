@@ -4,13 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import client.GUI;
-
 public class GUITest {
 
 	@Test
 	public void testGetInput() {
-		GUI gui = new GUI();
+		gui.GUI gui = new gui.GUI();
 		gui.start();
 		while(true)
 			gui.getInput(0);		

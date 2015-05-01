@@ -155,7 +155,7 @@ public class GUI {
 	public JButton[][] fillGrid(JPanel jp, int player) {
 		JLabel[] a_j = new JLabel[11];
 		JLabel[] one_ten = new JLabel[11];
-		JButton[][] playBoard = new JButton[10][10];
+		GameButton[][] playBoard = new GameButton[10][10];
 
 		for (int i = 0; i < 11; i++) {
 			one_ten[i] = new JLabel();
@@ -177,9 +177,9 @@ public class GUI {
 					//ImageIcon water = new ImageIcon("water.jpg");
 					//playBoard[j-1][i-1] = new JButton(water);
 					//TransferHandler transfer = new TransferHandler("text");				
-					playBoard[j-1][i-1] = new JButton();				
+					playBoard[j-1][i-1] = new GameButton(1,1);					
 					//playBoard[j-1][i-1].addPropertyChangeListener("dropLocation", new Repainter());
-					playBoard[j-1][i-1].setTransferHandler(new PlacementHandler());
+					/*playBoard[j-1][i-1].setTransferHandler(new PlacementHandler());
 					DropTarget dt = playBoard[j-1][i-1].getDropTarget();
 					DropTargetListener dtl = new Repainter(playBoard[j-1][i-1]);					
 					try {
@@ -189,19 +189,18 @@ public class GUI {
 					}
 
 					//playBoard[j-1][i-1].setTransferHandler(new PlacementHandler());
-					playBoard[j-1][i-1].addMouseListener(new MouseAdapter(){
+					/*playBoard[j-1][i-1].addMouseListener(new MouseAdapter(){
 						public void mousePressed(MouseEvent e){
 							JButton button = (JButton)e.getSource();
 							TransferHandler handle = button.getTransferHandler();
 							handle.exportAsDrag(button, e, TransferHandler.MOVE);
 						}
 					});
-					//playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
+					//playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));*/
 					jp.add(playBoard[j-1][i-1]);
 				}
 			}
-		}
-		System.out.println(playBoard[0][0].getBackground());
+		}		
 		return playBoard;
 	}
 
