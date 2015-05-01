@@ -1,12 +1,27 @@
-package server;
+package game;
+
+
+import java.util.ArrayList;
 
 public class Rulebook {
 	public final int DIM = 10;
 	private final int shipSetup[] = new int[] {2,2,2,1};
+	private final int MISS = -1;
+	private final int INVALID = -2;
 	private int shipRemain[] = new int[] {16, 16};
 	private int ships[][] = new int[2][4];
 	private int boards[][][] = new int[2][DIM][DIM];	
-
+	ArrayList<Ship> shipList = new ArrayList<Ship>();
+	
+	public Rulebook(){
+		for (int i = 0; i < DIM; i++){
+			for (int j = 0; j < DIM; j++){
+				boards[0][i][j] = MISS;
+				boards[1][i][j] = MISS;
+			}
+		}
+	}
+	//update setup placement
 	public boolean updatePlacement(int p[], int player){
 		int dx = p[2] - p[0];
 		int dy = p[3] - p[1];
@@ -34,6 +49,10 @@ public class Rulebook {
 		ships[player][size]++;
 		return true;
 	}
+	public void changePosition(){
+		
+	}
+	
 	public boolean targetIsValid(int p[], int player){
 		return (p[0] < DIM && p[0] >= 0
 				&& p[1] < DIM && p[1] >= 0
@@ -41,9 +60,9 @@ public class Rulebook {
 	}
 	public boolean targetIsHit(int p[], int player){		
 		int tmp = boards[-player+1][p[0]][p[1]];
-		boards[-player+1][p[0]][p[1]] = 2;
-		if (tmp == 1) shipRemain[-player + 1]--;
-		return tmp == 1;
+		boards[-player+1][p[0]][p[1]] = INVALID;
+		if (tmp>MISS) shipRemain[-player + 1]--;
+		return tmp > MISS;
 	}
 	
 	public boolean isGameOver(){

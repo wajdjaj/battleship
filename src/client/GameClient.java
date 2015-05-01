@@ -1,5 +1,8 @@
 package client;
 
+import game.Rulebook;
+import gui.GUI;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +16,7 @@ public class GameClient implements Runnable {
 	Socket socket;
 	PrintWriter toServer;
 	BufferedReader fromServer;
-	final int numberOfShips = 7;
+	Rulebook game;
 	String updates;
 	private final BufferedReader br;
 	GUI gui;
@@ -37,7 +40,6 @@ public class GameClient implements Runnable {
 		play();
 	}
 	void setup() {
-		int placedShips = 0;
 		String placement;
 		try {
 			socket = new Socket("localhost", 30000);
@@ -46,14 +48,11 @@ public class GameClient implements Runnable {
 				fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				toServer = new PrintWriter(socket.getOutputStream(), true);
 			}
-			while (placedShips < numberOfShips) {
-				boolean deployed = false;
+			while (game.shipsToPlace(0)) {				
 				do {
 					placement = getPlacement();
-					deployed = validPosition(placement);					;
-				} while (!deployed);
+				} while (!validPosition(placement));
 				updateGameState(placement,0, 1);
-				placedShips++;
 			}
 		} catch (IOException e) {
 			System.out.println("@setup " + e);
@@ -130,12 +129,14 @@ public class GameClient implements Runnable {
 			int state[] = new int[2];
 			if (placement.length() > 3){
 				p = Worker.getCoords(placement);
+				game.updatePlacement(p, 0);
 				state[0] = 0;
 				state[1] = status;
 			}
 			else{
 				System.out.println("updateGameState single");
 				p = Worker.stringToPosition(placement);
+				game.targetIsHit(p, board);
 				state[0] = board;
 				state[1] = status;
 			}
