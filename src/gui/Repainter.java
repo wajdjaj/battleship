@@ -10,18 +10,18 @@ import javax.swing.JButton;
 
 //part of drag and drop support
 public class Repainter implements DropTargetListener{
-	JButton button;
-	public Repainter(JButton button){
+	GameButton button;
+	public Repainter(GameButton button){
 		this.button = button;
 	}
 	@Override
 	public void dragEnter(DropTargetDragEvent dtde) {	
-		button.setBackground(Color.orange);		
+			
 	}
 
 	@Override
 	public void dragExit(DropTargetEvent dte) {
-		button.setBackground(Color.gray);
+		//button.setBackground(Color.gray);
 	}
 
 	
@@ -33,7 +33,7 @@ public class Repainter implements DropTargetListener{
 
 	@Override
 	public void drop(DropTargetDropEvent dtde) {
-		button.setBackground(Color.red);		
+		//button.setBackground(Color.red);		
 	}
 
 	@Override

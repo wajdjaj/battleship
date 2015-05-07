@@ -14,7 +14,7 @@ public class PlacementHandler extends TransferHandler{
 	//Somehow specify it only importing from other gameboard jbuttons
 	public boolean canImport(TransferHandler.TransferSupport info){
 		System.out.println("canImport");
-		info.setShowDropLocation(true);
+		info.getComponent().setBackground(Color.pink);
 		return true;
 	}
 	public boolean importData(JComponent comp, Transferable t){
@@ -38,8 +38,11 @@ public class PlacementHandler extends TransferHandler{
 	public void exportDone(JComponent c, Transferable t, int action){
 		System.out.println("exportDone");
 		c.setBackground(Color.red);//do whatever is appropriate for the method
-		if (action == MOVE){
+		/*if (action == MOVE){
 			;
-		}
+		}*/
+	}
+	public void exportData(){
+		
 	}
 }

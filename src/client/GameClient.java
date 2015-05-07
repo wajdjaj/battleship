@@ -98,7 +98,7 @@ public class GameClient implements Runnable {
 	String getPlacement(){
 		// " (Length of the boat | cord1 | cord2
 		if (gui != null) {
-			return gui.getInput(0) + " " +gui.getInput(0);
+			return gui.getInput(0);
 		}else{
 			try {
 				return br.readLine();

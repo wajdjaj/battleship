@@ -9,5 +9,5 @@ public class ColorScheme {
 	static Color hitGood = Color.green;
 	static Color hitBad = Color.red;
 	static Color ship = Color.cyan;
-	
+	static Color background = new Color(238,238,238);
 }

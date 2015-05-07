@@ -1,5 +1,8 @@
 package gui;
 
+import game.Position;
+import game.Ship;
+
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
@@ -17,12 +20,13 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 import java.util.TooManyListenersException;
 
 import javax.swing.border.LineBorder;
 
 public class GUI {
-	JButton[][][] boards;
+	GameButton[][][] boards;
 	private JFrame frame;
 	private StringWrapper mouseString;
 
@@ -46,7 +50,7 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
-		boards = new JButton[2][10][10];
+		boards = new GameButton[2][10][10];
 		mouseString = new StringWrapper();
 		initialize();
 	}
@@ -94,6 +98,17 @@ public class GUI {
 		JPanel opponentGrid = createGrid();
 		opponentView.add(opponentGrid);
 		boards[1] = fillGrid(opponentGrid, 1);
+		
+		//Experiment
+		Ship ship = new Ship();		
+		LinkedList<Position> pos = new LinkedList<Position>();
+		pos.add(new Position(5,5));
+		pos.add(new Position(5,4));
+		ship.updateShipPosition(pos);
+		boards[0][5][5].setShip(ship);
+		boards[0][5][5].setBackground(ColorScheme.ship);
+		boards[0][5][4].setShip(ship);
+		boards[0][5][4].setBackground(ColorScheme.ship);
 
 		JPanel buttonPanelviewOne = new JPanel();
 		buttonPanelviewOne.setBounds(320, 0, 245, 480);
@@ -152,7 +167,7 @@ public class GUI {
 	}
 
 	// player Player = 0 Opponent = 1
-	public JButton[][] fillGrid(JPanel jp, int player) {
+	public GameButton[][] fillGrid(JPanel jp, int player) {
 		JLabel[] a_j = new JLabel[11];
 		JLabel[] one_ten = new JLabel[11];
 		GameButton[][] playBoard = new GameButton[10][10];
@@ -172,31 +187,12 @@ public class GUI {
 				if (i == 0) jp.add(one_ten[j]);				
 				else if (j == 0) jp.add(a_j[i]);
 				else{
-					//EXPERIMENTING
-					
-					//ImageIcon water = new ImageIcon("water.jpg");
-					//playBoard[j-1][i-1] = new JButton(water);
-					//TransferHandler transfer = new TransferHandler("text");				
-					playBoard[j-1][i-1] = new GameButton(1,1);					
-					//playBoard[j-1][i-1].addPropertyChangeListener("dropLocation", new Repainter());
-					/*playBoard[j-1][i-1].setTransferHandler(new PlacementHandler());
-					DropTarget dt = playBoard[j-1][i-1].getDropTarget();
-					DropTargetListener dtl = new Repainter(playBoard[j-1][i-1]);					
-					try {
-						dt.addDropTargetListener(dtl);
-					} catch (TooManyListenersException e1) {
-						e1.printStackTrace();
-					}
-
-					//playBoard[j-1][i-1].setTransferHandler(new PlacementHandler());
-					/*playBoard[j-1][i-1].addMouseListener(new MouseAdapter(){
-						public void mousePressed(MouseEvent e){
-							JButton button = (JButton)e.getSource();
-							TransferHandler handle = button.getTransferHandler();
-							handle.exportAsDrag(button, e, TransferHandler.MOVE);
-						}
-					});
-					//playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));*/
+					//EXPERIMENTING													
+					playBoard[j-1][i-1] = new GameButton(j-1,i-1);					
+					if (player == 0)
+						playBoard[j-1][i-1].addMouseListener(new MousePlacement(playBoard, mouseString));
+					else if (player == 1)
+						;//playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
 					jp.add(playBoard[j-1][i-1]);
 				}
 			}
@@ -255,11 +251,4 @@ public class GUI {
 			p[1] += dy;
 		}
 	}
-}
-
-
-
-class StringWrapper { // This construct is necessary for the wait/notify
-						// mechanism used in MouseHandler and getInput to work
-	String input;
 }

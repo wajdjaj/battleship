@@ -3,6 +3,8 @@ package gui;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import utility.Utility;
+
 //moved to separate file
 public class MouseHandler extends MouseAdapter {
 	private int x, y, lplayer;
@@ -18,12 +20,9 @@ public class MouseHandler extends MouseAdapter {
 	
 	public void mouseClicked(MouseEvent evt) {
 		synchronized (mouseString) {
-			mouseString.input = String.format("%d %c%d", lplayer, intToChar(y),
+			mouseString.input = String.format("%d %c%d", lplayer, Utility.intToChar(y),
 					x);
 			mouseString.notifyAll();
 		}
-	}
-	private char intToChar(int in) {
-		return (char) ((int) 'a' + in);
 	}
 }

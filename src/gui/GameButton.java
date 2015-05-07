@@ -1,18 +1,24 @@
 package gui;
 
+import game.Position;
+import game.Ship;
+
 import javax.swing.JButton;
 
 public class GameButton extends JButton{
-	private int x, y;
+	private Position p;
+	private Ship ship;
 	public GameButton(int x, int y){
 		super();	
-		this.x = x;
-		this.y = y;		
+		p = new Position(x, y);
 	}
-	public int getBoardX(){
-		return x;
+	Position getPos(){
+		return p;
 	}
-	public int getBoardY(){
-		return y;
+	public void setShip(Ship ship){
+		this.ship = ship;
+	}
+	public Ship getShip(){
+		return ship;
 	}
 }

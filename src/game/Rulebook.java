@@ -4,7 +4,7 @@ package game;
 import java.util.ArrayList;
 
 public class Rulebook {
-	public final int DIM = 10;
+	public static final int DIM = 10;
 	private final int shipSetup[] = new int[] {2,2,2,1};
 	private final int MISS = -1;
 	private final int INVALID = -2;
@@ -56,7 +56,11 @@ public class Rulebook {
 	public boolean targetIsValid(int p[], int player){
 		return (p[0] < DIM && p[0] >= 0
 				&& p[1] < DIM && p[1] >= 0
-				&& boards[-player+1][p[0]][p[1]] != 2);
+				&& boards[-player+1][p[0]][p[1]] != INVALID);
+	}
+	public static boolean targetInsideBoard(Position p){
+		return (p.x < DIM && p.x >= 0
+				&& p.y < DIM && p.y >= 0);
 	}
 	public boolean targetIsHit(int p[], int player){		
 		int tmp = boards[-player+1][p[0]][p[1]];
