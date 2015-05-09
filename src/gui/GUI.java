@@ -5,6 +5,7 @@ import game.Ship;
 
 import java.awt.EventQueue;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -108,8 +109,10 @@ public class GUI {
 		boards[0][5][5].setShip(ship);
 		boards[0][5][5].setBackground(ColorScheme.ship);
 		boards[0][5][4].setShip(ship);
-		boards[0][5][4].setBackground(ColorScheme.ship);
-
+		boards[0][5][4].setBackground(ColorScheme.ship);				
+		
+		
+		
 		JPanel buttonPanelviewOne = new JPanel();
 		buttonPanelviewOne.setBounds(320, 0, 245, 480);
 		bodyPanel.add(buttonPanelviewOne);
@@ -129,13 +132,19 @@ public class GUI {
 	}
 
 	private JButton[] generateShipButtons(JPanel parent) {
-		JButton[] ships = new JButton[4];
+		GameButton[] ships = new GameButton[4];
 		parent.add(new JPanel());
 		parent.add(new JPanel());
 
 		for (int i = 1; i <= 4; i++) {
 			ImageIcon ship4 = new ImageIcon("graphics/" + "ship" + i +".png");
-			ships[i - 1] = new JButton(ship4);
+			ships[i - 1] = new GameButton(ship4, -1, -1);
+			ships[i - 1].addMouseListener(new MouseShipButton(boards[0], mouseString));
+			LinkedList<Position> pos = new LinkedList<Position>();
+			for (int j = 0; j < i; j++){
+				pos.add(new Position(0,j));
+			}
+			ships[i - 1].setShip(new Ship(pos));
 			parent.add(ships[i - 1]);
 			parent.add(generateShipBoxes(i));
 		}
@@ -188,11 +197,12 @@ public class GUI {
 				else if (j == 0) jp.add(a_j[i]);
 				else{
 					//EXPERIMENTING													
-					playBoard[j-1][i-1] = new GameButton(j-1,i-1);					
+					playBoard[j-1][i-1] = new GameButton(j-1,i-1);
+					playBoard[j-1][i-1].setBorder(BorderFactory.createLineBorder(Color.black));
 					if (player == 0)
 						playBoard[j-1][i-1].addMouseListener(new MousePlacement(playBoard, mouseString));
 					else if (player == 1)
-						;//playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
+						playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j, mouseString));
 					jp.add(playBoard[j-1][i-1]);
 				}
 			}
@@ -204,10 +214,8 @@ public class GUI {
 	public String getInput(int player) {
 		synchronized (mouseString) {
 			try {
-				do {
-					mouseString.wait();
-					System.out.println(mouseString.input);
-				} while (Character.getNumericValue(mouseString.input.charAt(0)) != player);
+				mouseString.wait();
+				System.out.println(mouseString.input);
 				return mouseString.input.substring(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

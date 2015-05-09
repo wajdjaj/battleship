@@ -32,6 +32,8 @@ public class MousePlacement extends MouseAdapter{
 			System.out.println("Mouse movement initiated");
 			moveInProgress = true;
 			initial = button.getPos();
+			if (initial.x < 0 || initial.y < 0)
+				initial = new Position(0,0);
 		}
 	}
 	public void mouseEntered(MouseEvent e){
@@ -42,10 +44,12 @@ public class MousePlacement extends MouseAdapter{
 			Position p = button.getPos();
 			LinkedList<Position> positionOffsets = ship.offset(p.x - initial.x, p.y - initial.y);
 			for (Position elem : positionOffsets){
-				if (Rulebook.targetInsideBoard(elem) && board[elem.x][elem.y].getShip() == null ){
-					//board[elem.x][elem.y].setBorder(BorderFactory.createLineBorder(Color.green));
-				}else{
-					//board[elem.x][elem.y].setBorder(BorderFactory.createLineBorder(Color.red));
+				if (Rulebook.targetInsideBoard(elem)){
+					if(board[elem.x][elem.y].getShip() == null ){
+						board[elem.x][elem.y].setBorder(BorderFactory.createLineBorder(ColorScheme.borderValid));
+					}else{
+						board[elem.x][elem.y].setBorder(BorderFactory.createLineBorder(ColorScheme.borderInvalid));
+					}
 				}
 			}
 		}
@@ -58,7 +62,8 @@ public class MousePlacement extends MouseAdapter{
 			LinkedList<Position> positionOffsets = ship.offset(p.x - initial.x, p.y - initial.y);
 			for (Position elem : positionOffsets){
 				if (Rulebook.targetInsideBoard(elem)){
-					//board[elem.x][elem.y].setBorder(BorderFactory.createLineBorder(Color.white));					
+					board[elem.x][elem.y].setBorder(
+							BorderFactory.createLineBorder(ColorScheme.borderDefault));					
 				}
 			}
 		}
@@ -67,6 +72,7 @@ public class MousePlacement extends MouseAdapter{
 		System.out.println("Mouse released");
 		//GameButton button = (GameButton)e.getSource();
 		Position p = lastEntered.getPos();
+		mouseExited(new MouseEvent(lastEntered, 0, 0, 0, 0, 0, 0, false));
 		if (moveInProgress){
 			System.out.println("Mouse movement finished");			
 			boolean valid = true;
@@ -79,16 +85,24 @@ public class MousePlacement extends MouseAdapter{
 			}
 			if (valid){
 				System.out.println("is valid");
-				LinkedList<Position> oldPositions = ship.getPositions();
+				Position op = ((GameButton)e.getSource()).getPos();
+				LinkedList<Position> oldPositions = new LinkedList<Position>();
+				if (op.x >= 0 || op.y >= 0) oldPositions = ship.getPositions();
 				for (Position elem : oldPositions){
 					board[elem.x][elem.y].setShip(null);
-					board[elem.x][elem.y].setBackground(ColorScheme.background);
+					board[elem.x][elem.y].setBackground(ColorScheme.board);	
 				}
+				int xmin = 150, ymin = 150, xmax = -150, ymax = -150;
+				Ship nShip = new Ship(positionOffsets);
 				for (Position elem : positionOffsets){
-					board[elem.x][elem.y].setShip(ship);
-					board[elem.x][elem.y].setBackground(ColorScheme.ship);
+					if (elem.x > xmax) xmax = elem.x;
+					if (elem.y > ymax) ymax = elem.y;
+					if (elem.x < xmin) xmin = elem.x;
+					if (elem.y > ymin) ymin = elem.y;
+					board[elem.x][elem.y].setShip(nShip);
+					board[elem.x][elem.y].setBackground(ColorScheme.ship);		
 				}
-				ship.updateShipPosition(positionOffsets);
+				updateMouseString(xmin,ymin,xmax,ymax);			
 			}
 			moveInProgress = false;
 		}

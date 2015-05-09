@@ -7,6 +7,10 @@ import java.util.LinkedList;
 
 public class Ship {
 	private LinkedList<Position> shipPosition;
+	public Ship(){};
+	public Ship(LinkedList<Position> shipPosition){
+		this.shipPosition = shipPosition;
+	}
 	int size(){
 		return shipPosition.size(); 
 	}

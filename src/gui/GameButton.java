@@ -3,6 +3,7 @@ package gui;
 import game.Position;
 import game.Ship;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class GameButton extends JButton{
@@ -10,6 +11,10 @@ public class GameButton extends JButton{
 	private Ship ship;
 	public GameButton(int x, int y){
 		super();	
+		p = new Position(x, y);
+	}
+	public GameButton(ImageIcon img, int x, int y){
+		super(img);
 		p = new Position(x, y);
 	}
 	Position getPos(){
