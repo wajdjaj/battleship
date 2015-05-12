@@ -6,4 +6,7 @@ public class Position {
 		this.x=x;
 		this.y=y;
 	}
+	public boolean equals(Position p){
+		return x == p.x && y == p.y; 
+	}
 }

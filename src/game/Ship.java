@@ -27,4 +27,24 @@ public class Ship {
 	public LinkedList<Position> getPositions(){
 		return shipPosition;
 	}
+	public void rotate(Position p){
+		for(Position elem : shipPosition){
+			if(p.x-elem.x != 0){			
+				elem.y = p.y - p.x + elem.x;
+				elem.x = p.x;
+			}
+			else if	(p.y-elem.y != 0){
+				elem.x = p.x + p.y - elem.y;
+				elem.y = p.y;
+			}
+		}
+	}
+	
+	public Ship copy(){
+		LinkedList<Position> tmp = new LinkedList<Position>();
+		for (Position p : shipPosition){
+			tmp.add(new Position(p.x,p.y));			
+		}
+		return new Ship(tmp);
+	}
 }
