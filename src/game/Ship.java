@@ -5,6 +5,8 @@ import gui.GameButton;
 
 import java.util.LinkedList;
 
+import utility.Utility;
+
 public class Ship {
 	private LinkedList<Position> shipPosition;
 	public Ship(){};
@@ -38,6 +40,18 @@ public class Ship {
 				elem.y = p.y;
 			}
 		}
+	}
+	
+	public String toString(){
+		int xmin = 100, xmax = -100, ymin = 100, ymax = -100;
+		for (Position p : shipPosition){
+			if (xmin > p.x) xmin = p.x;
+			if (xmax < p.x) xmax = p.x;
+			if (ymin > p.y) ymin = p.y;
+			if (ymax < p.y) ymax = p.y;
+		}
+		return String.format("%c%d %c%d", Utility.intToChar(ymin),
+			xmin , Utility.intToChar(ymax), xmin);
 	}
 	
 	public Ship copy(){

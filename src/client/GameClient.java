@@ -40,6 +40,7 @@ public class GameClient implements Runnable {
 		play();
 	}
 	void setup() {
+		game = new Rulebook();
 		String placement;
 		try {
 			socket = new Socket("localhost", 30000);
@@ -98,7 +99,7 @@ public class GameClient implements Runnable {
 	String getPlacement(){
 		// " (Length of the boat | cord1 | cord2
 		if (gui != null) {
-			return gui.getInput(0);
+			return gui.getPlacement();
 		}else{
 			try {
 				return br.readLine();

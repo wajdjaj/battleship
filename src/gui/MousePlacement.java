@@ -14,7 +14,6 @@ import javax.swing.BorderFactory;
 import utility.Utility;
 
 public class MousePlacement extends MouseAdapter{
-	StringWrapper mouseString;
 	GameButton board[][];
 	// This is not a good solution
 	static Ship ship;
@@ -24,9 +23,8 @@ public class MousePlacement extends MouseAdapter{
 	static GameButton lastEntered;
 	static boolean leftDown = false;
 	static boolean rightDown = false; 
-	public MousePlacement(GameButton board[][], StringWrapper mouseInput){
+	public MousePlacement(GameButton board[][]){
 		this.board = board;
-		this.mouseString = mouseInput;
 	}
 	public void mousePressed(MouseEvent e){		
 		if (e.getButton() == MouseEvent.BUTTON1) leftPressed(e);
@@ -56,13 +54,10 @@ public class MousePlacement extends MouseAdapter{
 		}			
 	}
 	//Need to fix  proper input
-	void updateMouseString(int xmin, int ymin, int xmax, int ymax){
-		synchronized (mouseString) {
-			mouseString.input = String.format("%c%d %c%d", Utility.intToChar(ymin),
-					xmin , Utility.intToChar(ymax), xmin);
-			mouseString.notifyAll();
-		}
-	}
+	/*void updateBob(int xmin, int ymin, int xmax, int ymax){
+			bob.append(String.format("%c%d %c%d ", Utility.intToChar(ymin),
+					xmin , Utility.intToChar(ymax), xmin));
+	}*/
 	public void leftPressed(MouseEvent e){
 		leftDown = true;
 		System.out.println("Leftmouse pressed");
@@ -93,7 +88,6 @@ public class MousePlacement extends MouseAdapter{
 				colorShip(tShip, ColorScheme.ship);
 				setBoard(ship, null);
 				setBoard(tShip,tShip);
-				//updateMouseString()
 			}else if (ship != null)
 				setBoard(ship, ship);
 		}

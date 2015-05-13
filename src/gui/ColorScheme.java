@@ -11,7 +11,7 @@ public class ColorScheme {
 	static Color hitGood = Color.green;
 	static Color hitBad = Color.red;
 	static Color ship = Color.cyan;
-	static Color borderDefault = Color.black;
+	static Color borderDefault = new Color(80,80,80);
 	static Color borderValid = Color.green;
 	static Color borderInvalid = Color.red;
 			
