@@ -19,7 +19,7 @@ public class MouseHandler extends MouseAdapter {
 	
 	public void mouseClicked(MouseEvent evt) {
 		synchronized (mouseString) {
-			mouseString.input = String.format("c%d", Utility.intToChar(y),
+			mouseString.input = String.format("%c%d", Utility.intToChar(y),
 					x);
 			mouseString.notifyAll();
 		}

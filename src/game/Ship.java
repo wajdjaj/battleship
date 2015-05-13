@@ -50,8 +50,11 @@ public class Ship {
 			if (ymin > p.y) ymin = p.y;
 			if (ymax < p.y) ymax = p.y;
 		}
+		String tmp = String.format("%c%d %c%d", Utility.intToChar(ymin),
+				xmin , Utility.intToChar(ymax), xmax);
+		System.out.println(tmp);
 		return String.format("%c%d %c%d", Utility.intToChar(ymin),
-			xmin , Utility.intToChar(ymax), xmin);
+			xmin+1 , Utility.intToChar(ymax), xmax+1);
 	}
 	
 	public Ship copy(){

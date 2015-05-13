@@ -22,7 +22,12 @@ public class Rulebook {
 		}
 	}
 	//update setup placement
-	public boolean updatePlacement(int p[], int player){
+	public boolean updatePlacement(int tp[], int player){
+		int[] p = new int[4];
+		for(int n = 0; n < 4; n++){
+		p[n] = tp[n];
+		}
+		
 		int dx = p[2] - p[0];
 		int dy = p[3] - p[1];
 		int size = Math.max(Math.abs(dx), Math.abs(dy));
@@ -62,7 +67,7 @@ public class Rulebook {
 		return (p.x < DIM && p.x >= 0
 				&& p.y < DIM && p.y >= 0);
 	}
-	public boolean targetIsHit(int p[], int player){		
+	public boolean targetIsHit(int p[], int player){
 		int tmp = boards[-player+1][p[0]][p[1]];
 		boards[-player+1][p[0]][p[1]] = INVALID;
 		if (tmp>MISS) shipRemain[-player + 1]--;

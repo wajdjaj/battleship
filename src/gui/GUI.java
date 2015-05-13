@@ -240,7 +240,7 @@ public class GUI {
 			try {
 				mouseString.wait();
 				System.out.println(mouseString.input);
-				return mouseString.input.substring(2);
+				return mouseString.input;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(1);
