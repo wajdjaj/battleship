@@ -139,7 +139,7 @@ public class GUI {
 		for (int i = 1; i <= 4; i++) {
 			ImageIcon ship4 = new ImageIcon("graphics/" + "ship" + i +".png");
 			ships[i - 1] = new GameButton(ship4, -1, -1);
-			ships[i - 1].addMouseListener(new MouseShipButton(boards[0], mouseString));
+//			ships[i - 1].addMouseListener(new MouseShipButton(boards[0], mouseString));
 			LinkedList<Position> pos = new LinkedList<Position>();
 			for (int j = 0; j < i; j++){
 				pos.add(new Position(0,j));
