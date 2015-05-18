@@ -1,26 +1,31 @@
-package client;
+package gui;
 
+import game.Position;
+import game.Rulebook;
+import game.Ship;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.border.LineBorder;
 
 public class GUI {
-	JButton[][][] boards;
+	GameButton[][][] boards;
 	private JFrame frame;
 	private StringWrapper mouseString;
+	private LinkedList<String> myPlacements;
 
 	/**
 	 * Launch the application.
@@ -42,8 +47,9 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
-		boards = new JButton[2][10][10];
+		boards = new GameButton[2][10][10];
 		mouseString = new StringWrapper();
+		myPlacements = new LinkedList<String>();
 		initialize();
 	}
 
@@ -63,7 +69,7 @@ public class GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame("Battleship Online");
 		frame.setBounds(100, 100, 900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -90,12 +96,22 @@ public class GUI {
 		JPanel opponentGrid = createGrid();
 		opponentView.add(opponentGrid);
 		boards[1] = fillGrid(opponentGrid, 1);
-
+		
+		//Auto generation of ships on my board! 
+		genShipOnMyboard(0, 0, 1);
+		genShipOnMyboard(2, 0, 1);
+		genShipOnMyboard(0, 2, 2);
+		genShipOnMyboard(3, 2, 2);
+		genShipOnMyboard(0, 4, 3);
+		genShipOnMyboard(4, 4, 3);
+		genShipOnMyboard(0, 6, 4);
+		
+		
 		JPanel buttonPanelviewOne = new JPanel();
 		buttonPanelviewOne.setBounds(320, 0, 245, 480);
 		bodyPanel.add(buttonPanelviewOne);
 
-		buttonPanelviewOne.setLayout(new GridLayout(7, 2, 20, 5));
+		buttonPanelviewOne.setLayout(new GridLayout(7, 2, 20, 3));
 		JButton[] ships = generateShipButtons(buttonPanelviewOne);
 
 		JPanel buttonPanelviewTwo = new JPanel();
@@ -110,17 +126,53 @@ public class GUI {
 	}
 
 	private JButton[] generateShipButtons(JPanel parent) {
-		JButton[] ships = new JButton[4];
+		GameButton[] ships = new GameButton[4];
 		parent.add(new JPanel());
 		parent.add(new JPanel());
 
 		for (int i = 1; i <= 4; i++) {
 			ImageIcon ship4 = new ImageIcon("graphics/" + "ship" + i +".png");
-			ships[i - 1] = new JButton(ship4);
+			ships[i - 1] = new GameButton(ship4, -1, -1);
+//			ships[i - 1].addMouseListener(new MouseShipButton(boards[0], mouseString));
+			LinkedList<Position> pos = new LinkedList<Position>();
+			for (int j = 0; j < i; j++){
+				pos.add(new Position(0,j));
+			}
+			ships[i - 1].setShip(new Ship(pos));
 			parent.add(ships[i - 1]);
 			parent.add(generateShipBoxes(i));
 		}
+		//BUTTON RDY !!
+		JButton btnrdy = new JButton("Ready!");
+        btnrdy.addActionListener(new ActionListener() {
+        	 
+            public void actionPerformed(ActionEvent e)
+            {
+                SendPosition();
+            }
+        }); 
+		parent.add(btnrdy);
+		//BUTTON RDY !!
 		return ships;
+	}
+
+	protected void SendPosition() {
+		boolean b[][] = new boolean[Rulebook.DIM][Rulebook.DIM];
+		for (int i = 0; i < Rulebook.DIM; i++){
+			for (int j = 0; j < Rulebook.DIM; j++){
+				Ship s = boards[0][i][j].getShip();
+				if (s != null && !b[i][j]){
+						myPlacements.add(s.toString());
+						LinkedList<Position> pos = s.getPositions();
+						for (Position p : pos){
+							b[p.x][p.y] = true;
+						}
+				}				
+			}
+		}
+		synchronized(myPlacements){
+			myPlacements.notifyAll();
+		}
 	}
 
 	private JPanel generateShipBoxes(int shipNumber) {
@@ -141,17 +193,17 @@ public class GUI {
 
 	private JPanel createGrid() {
 		JPanel grid = new JPanel();
-		grid.setBorder(new LineBorder(new Color(0, 0, 0)));
+		grid.setBorder(new LineBorder(new JFrame().getBackground()));
 		grid.setBounds(10, 45, 300, 300);
 		grid.setLayout(new GridLayout(11, 11, 0, 0));
 		return grid;
 	}
 
 	// player Player = 0 Opponent = 1
-	public JButton[][] fillGrid(JPanel jp, int player) {
+	public GameButton[][] fillGrid(JPanel jp, int player) {
 		JLabel[] a_j = new JLabel[11];
 		JLabel[] one_ten = new JLabel[11];
-		JButton[][] playBoard = new JButton[10][10];
+		GameButton[][] playBoard = new GameButton[10][10];
 
 		for (int i = 0; i < 11; i++) {
 			one_ten[i] = new JLabel();
@@ -168,14 +220,17 @@ public class GUI {
 				if (i == 0) jp.add(one_ten[j]);				
 				else if (j == 0) jp.add(a_j[i]);
 				else{
-					ImageIcon water = new ImageIcon("water.jpg");
-					playBoard[j-1][i-1] = new JButton(water);
-					
-					playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
+					//EXPERIMENTING													
+					playBoard[j-1][i-1] = new GameButton(j-1,i-1);
+					playBoard[j-1][i-1].setBorder(BorderFactory.createLineBorder(ColorScheme.borderDefault));
+					if (player == 0)
+						playBoard[j-1][i-1].addMouseListener(new MousePlacement(playBoard));
+					else if (player == 1)
+						playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j, mouseString));
 					jp.add(playBoard[j-1][i-1]);
 				}
 			}
-		}
+		}		
 		return playBoard;
 	}
 
@@ -183,28 +238,27 @@ public class GUI {
 	public String getInput(int player) {
 		synchronized (mouseString) {
 			try {
-				do {
-					mouseString.wait();
-					System.out.println(mouseString.input);
-				} while (Character.getNumericValue(mouseString.input.charAt(0)) != player);
-				return mouseString.input.substring(2);
+				mouseString.wait();
+				System.out.println(mouseString.input);
+				return mouseString.input;
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(1);
 			}
 		}
 		return null;
+		
 	}
 
 	//string containing information about what part of the board to update
-	void updateBoardState(int p[], int state[]) {
+	public void updateBoardState(int p[], int state[]) {
 		if (state[1] == -1 || p == null)
 			return;
 		if (p.length <= 2) { // if fire
 			Color color;
-			if (state[0] == 0 && state[1] == 1) color = Color.red; // player hit
-			else if (state[0] == 1 && state[1] == 1) color = Color.green; // opponent hit
-			else color = Color.black;			
+			if (state[0] == 0 && state[1] == 1) color = ColorScheme.hitBad; // player hit
+			else if (state[0] == 1 && state[1] == 1) color = ColorScheme.hitGood; // opponent hit
+			else color = ColorScheme.miss;			
 			drawFire(p, state[0], color);
 		} else if (p.length == 4) {
 			drawPlacement(p, state[0]);
@@ -224,39 +278,34 @@ public class GUI {
 		dx = dx/size;
 		dy = dy/size;
 		for (int i = 0; i <= size; i++){
-			boards[player][p[0]][p[1]].setBackground(Color.cyan);
+			boards[player][p[0]][p[1]].setBackground(ColorScheme.ship);
 			p[0] += dx;
 			p[1] += dy;
 		}
 	}
-}
-
-class MouseHandler extends MouseAdapter {
-	private int x, y, lplayer;
-	private StringWrapper mouseString;
-
-	public MouseHandler(int y, int x, int lplayer, StringWrapper mouseString) {
-		super();
-		this.x = x;
-		this.y = y;
-		this.lplayer = lplayer;
-		this.mouseString = mouseString;
-	}
-
-	public void mouseClicked(MouseEvent evt) {
-		synchronized (mouseString) {
-			mouseString.input = String.format("%d %c%d", lplayer, intToChar(y),
-					x);
-			mouseString.notifyAll();
+	
+	private void genShipOnMyboard(int x, int y, int size){
+		Ship ship = new Ship();		
+		LinkedList<Position> pos = new LinkedList<Position>();
+		for(int i = 0; i < size; i++){
+			pos.add(new Position(x+i,y));
+			boards[0][x+i][y].setShip(ship);
+			boards[0][x+i][y].setBackground(ColorScheme.ship);
 		}
-	}
 
-	private char intToChar(int in) {
-		return (char) ((int) 'a' + in);
+		ship.updateShipPosition(pos);
 	}
-}
-
-class StringWrapper { // This construct is necessary for the wait/notify
-						// mechanism used in MouseHandler and getInput to work
-	String input;
+	public String getPlacement(){
+		
+		if(myPlacements.isEmpty()){
+			synchronized(myPlacements){
+				try {
+					myPlacements.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return myPlacements.remove();
+	}
 }
