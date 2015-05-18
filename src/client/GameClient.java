@@ -4,11 +4,20 @@ import game.Rulebook;
 import gui.GUI;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.Socket;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
 
 import server.Worker;
 
@@ -160,6 +169,7 @@ public class GameClient implements Runnable {
 				System.exit(0);
 			}
 			if (result.equals("Success")){
+				playsound("hit");
 				System.out.println("You scored a critical hit!");
 				updateGameState(target,1 ,1);
 				return true;
@@ -170,6 +180,7 @@ public class GameClient implements Runnable {
 				return true;
 			}
 			System.out.println("Miss!");
+			playsound("miss");
 			updateGameState(target, 1, 0);
 		} catch (IOException e) {
 			System.out.println("@isHit " + e);
@@ -183,5 +194,22 @@ public class GameClient implements Runnable {
 			return gui.getInput(1);
 		else 
 			return getPlacement();
+	}
+	
+	public void playsound(String s){
+		try{
+			String soundName = "";
+			if(s.equals("hit")) soundName = "sound/hit.wav";
+			if(s.equals("miss")) soundName = "sound/miss.wav";
+
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(-10.0f);
+			clip.start();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
