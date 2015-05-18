@@ -168,9 +168,9 @@ public class GUI {
 				if (i == 0) jp.add(one_ten[j]);				
 				else if (j == 0) jp.add(a_j[i]);
 				else{
-					ImageIcon water = new ImageIcon("water.jpg");
-					playBoard[j-1][i-1] = new JButton(water);
-					
+			/*		ImageIcon water = new ImageIcon("water.jpg");
+					playBoard[j-1][i-1] = new JButton(water); */
+					playBoard[j-1][i-1] = new JButton();
 					playBoard[j-1][i-1].addMouseListener(new MouseHandler(i-1,j,player, mouseString));
 					jp.add(playBoard[j-1][i-1]);
 				}
@@ -212,7 +212,8 @@ public class GUI {
 	}
 
 	private void drawFire(int p[], int player, Color color) {
-		boards[player][p[0]][p[1]].setBackground(color);
+		ImageIcon fire = new ImageIcon("fire.png");
+		boards[player][p[0]][p[1]] = new JButton(fire);
 		return;
 	}
 	
