@@ -7,6 +7,7 @@ import game.Ship;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,7 +123,28 @@ public class GUI {
 
 		JPanel headerPanel = new JPanel();
 		headerPanel.setBounds(0, 0, 900, 120);
+		headerPanel.setLayout(new GridLayout(6, 1, 0, 0));
+		frame.getContentPane().add(headerPanel);
+		JLabel titleLabel1 = titleLabel("______  ___ _____ _____ _      _____ _____ _   _ ___________  _____ \n");
+		JLabel titleLabel2 = titleLabel("| ___ \\/ _ \\_   _|_   _| |    |  ___/  ___| | | |_   _| ___ \\/  ___| \n");
+		JLabel titleLabel3 = titleLabel("| |_/ / /_\\ \\| |   | | | |    | |__ \\ `--.| |_| | | | | |_/ /\\ `--.  \n");
+		JLabel titleLabel4 = titleLabel("| ___ \\  _  || |   | | | |    |  __| `--. \\  _  | | | |  __/  `--. \\ \n");
+		JLabel titleLabel5= titleLabel("| |_/ / | | || |   | | | |____| |___/\\__/ / | | |_| |_| |    /\\__/ / \n");
+		JLabel titleLabel6 = titleLabel("\\____/\\_| |_/\\_/   \\_/ \\_____/\\____/\\____/\\_| |_/\\___/\\_|    \\____/  \n");
+		headerPanel.add(titleLabel1);
+		headerPanel.add(titleLabel2);
+		headerPanel.add(titleLabel3);
+		headerPanel.add(titleLabel4);
+		headerPanel.add(titleLabel5);
+		headerPanel.add(titleLabel6);
 
+	}
+
+	private JLabel titleLabel(String string) {
+		string = "                               " + string;
+		JLabel label = new JLabel(string);
+		label.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		return label;
 	}
 
 	private JButton[] generateShipButtons(JPanel parent) {
