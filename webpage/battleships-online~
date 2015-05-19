@@ -1,113 +1,108 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-	<html lang="en">
-<style>
-	html {
-    		 min-height: 100%
-	}
-	td.side {
-    		width: 300px;
-		height: 100%;
-		background-image: url("sideship.jpg");
-		background-repeat: repeat;
-	}
-	td.main {
-		width: 650px;
-	}
-	p.main {
-		padding-left:25px;
-		padding-right:25px;	
-	}
-	body {
-		height: 100%;
-		margin: 0;
-		background-repeat: no-repeat;
-    		background: #ff00a1; /* Old browsers */
-		background: -moz-linear-gradient(top,  #ff00a1 0%, #0fb4e7 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff00a1), color-stop(100%,#0fb4e7)); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* Opera 11.10+ */
-	s	background: -ms-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* IE10+ */
-		background: linear-gradient(to bottom,  #ff00a1 0%,#0fb4e7 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff00a1', endColorstr='#0fb4e7',GradientType=0 ); /* IE6-9 */
+<html lang="en">
+	<style>
+		html {
+	    		 min-height: 100%
+		}
+		td.side {
+	    		width: 300px;
+			height: 100%;
+			background-image: url("sideship.jpg");
+			background-repeat: repeat;
+		}
+		td.main {
+			width: 650px;
+		}
+		p.main {
+			padding-left:25px;
+			padding-right:25px;	
+		}
+		body {
+			height: 100%;
+			margin: 0;
+			background-repeat: no-repeat;
+	    		background: #ff00a1; /* Old browsers */
+			background: -moz-linear-gradient(top,  #ff00a1 0%, #0fb4e7 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff00a1), color-stop(100%,#0fb4e7)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* Opera 11.10+ */
+		s	background: -ms-linear-gradient(top,  #ff00a1 0%,#0fb4e7 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  #ff00a1 0%,#0fb4e7 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff00a1', endColorstr='#0fb4e7',GradientType=0 ); /* IE6-9 */
 
-	}
-	.box {border:2px solid #0fb4e7;width:650px;}
-	.box h2 {background:#0fb4e7;color:#ff00a1;padding:10px;width:300px;font-size:300%;border:2px solid white;opacity:0.75}
-	.box p {color:#333;padding:25px;
-	}
-	@-webkit-keyframes rotating /* Safari and Chrome */ {
-	  from {
-	    -ms-transform: rotate(0deg);
-	    -moz-transform: rotate(0deg);
-	    -webkit-transform: rotate(0deg);
-	    -o-transform: rotate(0deg);
-	    transform: rotate(0deg);
-	  }
-	  to {
-	    -ms-transform: rotate(360deg);
-	    -moz-transform: rotate(360deg);
-	    -webkit-transform: rotate(360deg);
-	    -o-transform: rotate(360deg);
-	    transform: rotate(360deg);
-	  }
-	}
-	@keyframes rotating {
-	  from {
-	    -ms-transform: rotate(0deg);
-	    -moz-transform: rotate(0deg);
-	    -webkit-transform: rotate(0deg);
-	    -o-transform: rotate(0deg);
-	    transform: rotate(0deg);
-	  }
-	  to {
-	    -ms-transform: rotate(360deg);
-	    -moz-transform: rotate(360deg);
-	    -webkit-transform: rotate(360deg);
-	    -o-transform: rotate(360deg);
-	    transform: rotate(360deg);
-	  }
-	}
-	.rotating {
-	  -webkit-animation: rotating 2s linear infinite;
-	  -moz-animation: rotating 2s linear infinite;
-	  -ms-animation: rotating 2s linear infinite;
-	  -o-animation: rotating 2s linear infinite;
-	  animation: rotating 2s linear infinite;
-	}
-</style>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<title>Battleships ONLINE! The most thrilling game of the century, now ONLINE!</title>
-</head>
-<body>
-	<table>
-		<tr>
-			<td class="side"> </td>
-			<td>
-				<div class="box">
-					<img src="explosion.png" class="blink"><br>
-					<img src="explosion.png" align="right" class="blink">
+		}
+		.box {border:2px solid #0fb4e7;width:650px;}
+		.box h2 {background:#0fb4e7;color:#ff00a1;padding:10px;width:300px;font-size:300%;border:2px solid white;opacity:0.75}
+		.box p {color:#333;padding:25px;
+		}
+		@-webkit-keyframes rotating /* Safari and Chrome */ {
+		  from {
+		    -ms-transform: rotate(0deg);
+		    -moz-transform: rotate(0deg);
+		    -webkit-transform: rotate(0deg);
+		    -o-transform: rotate(0deg);
+		    transform: rotate(0deg);
+		  }
+		  to {
+		    -ms-transform: rotate(360deg);
+		    -moz-transform: rotate(360deg);
+		    -webkit-transform: rotate(360deg);
+		    -o-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
+		}
+		@keyframes rotating {
+		  from {
+		    -ms-transform: rotate(0deg);
+		    -moz-transform: rotate(0deg);
+		    -webkit-transform: rotate(0deg);
+		    -o-transform: rotate(0deg);
+		    transform: rotate(0deg);
+		  }
+		  to {
+		    -ms-transform: rotate(360deg);
+		    -moz-transform: rotate(360deg);
+		    -webkit-transform: rotate(360deg);
+		    -o-transform: rotate(360deg);
+		    transform: rotate(360deg);
+		  }
+		}
+		.rotating {
+		  -webkit-animation: rotating 2s linear infinite;
+		  -moz-animation: rotating 2s linear infinite;
+		  -ms-animation: rotating 2s linear infinite;
+		  -o-animation: rotating 2s linear infinite;
+		  animation: rotating 2s linear infinite;
+		}
+	</style>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Battleships ONLINE! The most thrilling game of the century, now ONLINE!</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td class="side"> </td>
+				<td>
+					<div class="box">
+						<img src="explosion.png" class="blink"><br>
+						<img src="explosion.png" align="right" class="blink">
 
-					<center><h2 class="rotating">Battleships ONLINE!</h2></center>
-					<img src="explosion.png" align="left" class="blink">
-					<center><p>The most thrilling board game of the last century, now playable online.</p></center>
-				</div>
-				<p class="main">Finally, the game that entertained our forefathers for aeons is available for play online!<br>
-				<b>Battleships Online</B> is an online game where you face off against a friend in friendly, yet exciting, ship battles. By guessing where the opponent has placed his fleet while keeping the whereabouts of your own fleet hidden you will become the champion of the sea. If you fail, however, you will become the laughing stock of sailors and seamen all around the world.</p>
-				<p class="main"> Using <b>Battleships Online</b> you can play a game of Battleships with a friend anywhere in the world. It works just the same way as the classic board game Battleships, but over the internet. You place your ships on a grid, which is hidden from the opponent, by dragging and dropping. The opponent does the same thing, whereafter you take turns guessing where your opponents ships are placed. If you score a hit you may make another guess, if your guess misses the turn goes to the opponent.
+						<center><h2 class="rotating">Battleships ONLINE!</h2></center>
+						<img src="explosion.png" align="left" class="blink">
+						<center><p>The most thrilling board game of the last century, now playable online.</p></center>
+					</div>
+					<p class="main">Finally, the game that entertained our forefathers for aeons is available for play online!<br>
+					<b>Battleships Online</B> is an online game where you face off against a friend in friendly, yet exciting, ship battles. By guessing where the opponent has placed his fleet while keeping the whereabouts of your own fleet hidden you will become the champion of the sea. If you fail, however, you will become the laughing stock of sailors and seamen all around the world.</p>
+					<p class="main"> Using <b>Battleships Online</b> you can play a game of Battleships with a friend anywhere in the world. It works just the same way as the classic board game Battleships, but over the internet. You place your ships on a grid, which is hidden from the opponent, by dragging and dropping. The opponent does the same thing, whereafter you take turns guessing where your opponents ships are placed. If you score a hit you may make another guess, if your guess misses the turn goes to the opponent.
 
-				<p class="main">[Insert screenshot här]<br>The implementation of the game uses [insert nätverksprotokoll här]. To play a game you need two clients and a server. The clients mostly handles the GUI and contact with the server, where the actual game takes place (so as to deny players from modifying their client to cheat). [Mer teknisk beskrivning här?]</p>
+					<p class="main">[Insert screenshot här]<br>
+	The implementation of the game uses [insert nätverksprotokoll här]. To play a game you need two clients and a server. The clients mostly handles the GUI and contact with the server, where the actual game takes place (so as to deny players from modifying their client to cheat). [Mer teknisk beskrivning här?]</p>
 
-				<p class="main">Overall, we're content with the outcome and result of our project. Battleships in itself is a quite simple game with few complicated rules or scenarios, which makes it advantageous to implement in a networked fashion. Working with Swing in Java to design the GUI wasn't quite as exciting as anticipated. [Nåt annat som var särskilt spännande/intressant?]</p>
-			</td>
-			<td class="side"><iframe width="10" height="10" src="https://www.youtube.com/embed/Nwc0shJ2aYc?autoplay=1" frameborder="0" allowfullscreen align="bottom"></iframe> </td>
-		<tr>
-	</table>	
-
-
-
-</body>
-
-
-
+					<p class="main">Overall, we're content with the outcome and result of our project. Battleships in itself is a quite simple game with few complicated rules or scenarios, which makes it advantageous to implement in a networked fashion. Working with Swing in Java to design the GUI wasn't quite as exciting as anticipated. [Nåt annat som var särskilt spännande/intressant?]</p>
+				</td>
+				<td class="side"><iframe width="10" height="10" src="https://www.youtube.com/embed/Nwc0shJ2aYc?autoplay=1" frameborder="0" allowfullscreen align="bottom"></iframe> </td>
+			<tr>
+		</table>	
+	</body>
 </html>
