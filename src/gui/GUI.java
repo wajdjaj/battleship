@@ -283,6 +283,13 @@ public class GUI {
 			p[1] += dy;
 		}
 	}
+	public void deactivate(){
+		for (int i = 0; i < Rulebook.DIM; i++){
+			for (int j = 0; j < Rulebook.DIM; j++){
+				boards[0][i][j].removeMouseListener(boards[0][i][j].getMouseListeners()[1]);
+			}
+		}
+	}
 	
 	private void genShipOnMyboard(int x, int y, int size){
 		Ship ship = new Ship();		

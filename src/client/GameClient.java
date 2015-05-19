@@ -52,7 +52,12 @@ public class GameClient implements Runnable {
 		game = new Rulebook();
 		String placement;
 		try {
-			socket = new Socket("localhost", 30000);
+			String connectip = JOptionPane.showInputDialog(null, "Enter IP: (ex 192.168.0.1)");
+			if(connectip.equals("")){
+				socket = new Socket("localhost", 30000);
+			}else{
+				socket = new Socket(connectip, 30000);
+			}
 			if(socket.isConnected()){
 				System.out.println("Connected to server.");
 				fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -64,6 +69,7 @@ public class GameClient implements Runnable {
 				} while (!validPosition(placement));
 				updateGameState(placement,0, 1);
 			}
+			gui.deactivate();
 		} catch (IOException e) {
 			System.out.println("@setup " + e);
 			System.exit(1);

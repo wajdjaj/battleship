@@ -22,7 +22,7 @@ public class MousePlacement extends MouseAdapter{
 	static boolean moveInProgress = false;
 	static GameButton lastEntered;
 	static boolean leftDown = false;
-	static boolean rightDown = false; 
+	static boolean rightDown = false;	
 	public MousePlacement(GameButton board[][]){
 		this.board = board;
 	}
