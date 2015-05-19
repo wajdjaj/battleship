@@ -277,18 +277,19 @@ public class GUI {
 		if (state[1] == -1 || p == null)
 			return;
 		if (p.length <= 2) { // if fire
-			Color color;
-			if (state[0] == 0 && state[1] == 1) color = ColorScheme.hitBad; // player hit
-			else if (state[0] == 1 && state[1] == 1) color = ColorScheme.hitGood; // opponent hit
-			else color = ColorScheme.miss;			
-			drawFire(p, state[0], color);
+			Color color = null;
+			if (state[0] == 0 && state[1] == 1) drawFire(p, state[0]);//color = ColorScheme.hitBad; // player hit
+			else if (state[0] == 1 && state[1] == 1) drawFire(p, state[0]);//color = ColorScheme.hitGood; // opponent hit
+			else color = ColorScheme.miss;		
+			boards[state[0]][p[0]][p[1]].setBackground(color);
 		} else if (p.length == 4) {
 			drawPlacement(p, state[0]);
 		}
 	}
 
-	private void drawFire(int p[], int player, Color color) {
-		boards[player][p[0]][p[1]].setBackground(color);
+	private void drawFire(int p[], int player) {
+		ImageIcon fire = new ImageIcon("fire.png");
+		boards[player][p[0]][p[1]].setIcon(fire);
 		return;
 	}
 	

@@ -17,6 +17,7 @@ public class GameButton extends JButton{
 		super(img);
 		p = new Position(x, y);
 	}
+	
 	Position getPos(){
 		return p;
 	}
