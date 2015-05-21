@@ -63,7 +63,7 @@ public class Worker implements Runnable {
 	public static int[] stringToPosition(String in){
 		System.out.println("stringtopos: " + in);
 		if (in == null)
-			return null;
+			System.exit(0);
 		Pattern pattern = Pattern.compile("(\\w\\d+)");
 		Matcher matcher = pattern.matcher(in);
 		if (matcher.find()){			

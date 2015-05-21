@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import com.sun.org.apache.bcel.internal.util.ClassLoader;
+
 public class GUI {
 	GameButton[][][] boards;
 	private JFrame frame;
@@ -153,7 +155,7 @@ public class GUI {
 		parent.add(new JPanel());
 
 		for (int i = 1; i <= 4; i++) {
-			ImageIcon ship4 = new ImageIcon("graphics/" + "ship" + i +".png");
+			ImageIcon ship4 = new ImageIcon(getClass().getResource("/ship" + i + ".png"));
 			ships[i - 1] = new GameButton(ship4, -1, -1);
 //			ships[i - 1].addMouseListener(new MouseShipButton(boards[0], mouseString));
 			LinkedList<Position> pos = new LinkedList<Position>();
@@ -288,7 +290,8 @@ public class GUI {
 	}
 
 	private void drawFire(int p[], int player) {
-		ImageIcon fire = new ImageIcon("fire.png");
+		
+		ImageIcon fire = new ImageIcon(this.getClass().getResource("/fire.png"));
 		boards[player][p[0]][p[1]].setIcon(fire);
 		return;
 	}

@@ -208,12 +208,12 @@ public class GameClient implements Runnable {
 			if(s.equals("hit")) soundName = "sound/hit.wav";
 			if(s.equals("miss")) soundName = "sound/miss.wav";
 
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-10.0f);
-			clip.start();
+			//AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+			//Clip clip = AudioSystem.getClip();
+			//clip.open(audioInputStream);
+			//FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			//gainControl.setValue(-10.0f);
+			//clip.start();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
