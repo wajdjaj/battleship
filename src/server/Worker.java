@@ -1,5 +1,7 @@
 package server;
 
+import game.Rulebook;
+
 import java.io.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
@@ -28,6 +30,9 @@ public class Worker implements Runnable {
 				if (p == null || !rules.updatePlacement(p, player)){
 					toClient.println("Placement Invalid");
 					System.out.println("Invalid position");
+					for (int i = 0; i < 4; i++){
+						System.out.println(p[i]);
+					}
 				}else{
 					System.out.println("Success");
 					toClient.println("Success");
@@ -47,7 +52,7 @@ public class Worker implements Runnable {
 				int tmp[];
 				if ((tmp = stringToPosition(placement.substring(i*2))) == null)
 					return null;
-				p[i*2] = tmp[0];
+				p[i*2] = tmp[0]; 
 				p[i*2+1] = tmp[1];
 			}
 			return p;
@@ -55,7 +60,8 @@ public class Worker implements Runnable {
 		return null;
 	}
 	
-	public static int[] stringToPosition(String in){	
+	public static int[] stringToPosition(String in){
+		System.out.println("stringtopos: " + in);
 		if (in == null)
 			return null;
 		Pattern pattern = Pattern.compile("(\\w\\d+)");
