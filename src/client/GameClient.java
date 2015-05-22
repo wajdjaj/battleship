@@ -20,6 +20,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 import server.Worker;
+import utility.Utility;
 
 public class GameClient implements Runnable {
 	Socket socket;
@@ -144,14 +145,14 @@ public class GameClient implements Runnable {
 			int p[];
 			int state[] = new int[2];
 			if (placement.length() > 3){
-				p = Worker.getCoords(placement);
+				p = Utility.getCoords(placement);
 				game.updatePlacement(p, 0);
 				state[0] = 0;
 				state[1] = status;
 			}
 			else{
 				System.out.println("updateGameState single");
-				p = Worker.stringToPosition(placement);
+				p = Utility.stringToPosition(placement);
 				game.targetIsHit(p, board);
 				state[0] = board;
 				state[1] = status;

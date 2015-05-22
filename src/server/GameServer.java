@@ -7,6 +7,8 @@ import java.net.*;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import utility.Utility;
+
 class Position{
 	int x, y;
 	Position(int x, int y){
@@ -73,7 +75,7 @@ public class GameServer implements Runnable{
 			String target;
 			while(true){
 				target = fromClient[currentPlayer].readLine();
-				p = Worker.stringToPosition(target);		
+				p = Utility.stringToPosition(target);		
 				if (p != null && rules.targetIsValid(p, currentPlayer))
 					break;
 				toClient[currentPlayer].println("Invalid");
